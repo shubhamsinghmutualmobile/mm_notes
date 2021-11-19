@@ -5,6 +5,9 @@ class FloatingBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const _splashRadius = 20.0;
+    const _notchMargin = 8.0;
+
     return BottomAppBar(
       color: Theme.of(context).backgroundColor,
       child: Row(
@@ -12,23 +15,23 @@ class FloatingBottomBar extends StatelessWidget {
           IconButton(
               onPressed: () {},
               icon: const Icon(Icons.check_box_outlined),
-              splashRadius: 20),
+              splashRadius: _splashRadius),
           IconButton(
               onPressed: () {},
               icon: const Icon(Icons.brush_outlined),
-              splashRadius: 20),
+              splashRadius: _splashRadius),
           IconButton(
               onPressed: () {},
               icon: const Icon(Icons.mic_none),
-              splashRadius: 20),
+              splashRadius: _splashRadius),
           IconButton(
               onPressed: () {},
               icon: const Icon(Icons.image_outlined),
-              splashRadius: 20),
+              splashRadius: _splashRadius),
         ],
       ),
       shape: const CircularNotchedRectangle(),
-      notchMargin: 8,
+      notchMargin: _notchMargin,
     );
   }
 }

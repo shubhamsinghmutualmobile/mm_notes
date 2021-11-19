@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mm_notes/screens/note_detail_screen/note_detail_screen.dart';
 
-import 'screens/landing_screen/components/floating_bottom_bar.dart';
-import 'screens/landing_screen/components/top_search_card.dart';
+import 'components/floating_bottom_bar.dart';
+import 'components/top_search_card.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,12 @@ class LandingScreen extends StatelessWidget {
     return Scaffold(
       appBar: const TopSearchCard(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const NoteDetailScreen()));
+        },
         child: Icon(Icons.add, color: Theme.of(context).hintColor),
         backgroundColor: Theme.of(context).backgroundColor,
         elevation: 4,

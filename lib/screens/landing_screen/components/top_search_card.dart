@@ -5,19 +5,22 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    const _padding = 8.0;
+    const _splashRadius = _padding * 2.5;
+
     return Container(
       margin: const EdgeInsets.only(top: kToolbarHeight),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: _padding),
       child: Column(
         children: [
-          const SizedBox(height: 6),
+          const SizedBox(height: _padding - (_padding / 4)),
           Card(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32)),
-              elevation: 4,
+                  borderRadius: BorderRadius.circular(_padding * 4)),
+              elevation: _padding / 2,
               child: InkWell(
                 customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32)),
+                    borderRadius: BorderRadius.circular(_padding * 4)),
                 onTap: () {},
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -27,7 +30,7 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
                         IconButton(
                           onPressed: () {},
                           icon: const Icon(Icons.menu),
-                          splashRadius: 20,
+                          splashRadius: _splashRadius,
                         ),
                         Text("Search your notes",
                             style: Theme.of(context).textTheme.subtitle1),
@@ -39,17 +42,18 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
                         IconButton(
                           onPressed: () {},
                           icon: const Icon(Icons.view_agenda_outlined),
-                          splashRadius: 20,
+                          splashRadius: _splashRadius,
                         ),
                         Container(
-                          margin: const EdgeInsets.only(right: 8.0),
+                          margin: const EdgeInsets.only(right: _padding),
                           child: Card(
                             elevation: 0.1,
                             shape: const CircleBorder(),
                             child: InkWell(
                               customBorder: const CircleBorder(),
                               child: const Padding(
-                                padding: EdgeInsets.all(6.0),
+                                padding:
+                                    EdgeInsets.all(_padding - (_padding / 4)),
                                 child: Icon(Icons.person),
                               ),
                               onTap: () {},
