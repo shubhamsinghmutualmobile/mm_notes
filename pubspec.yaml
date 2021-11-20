@@ -14,6 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   sqflite:
   path_provider:
+  flutter_staggered_grid_view:
 
 dev_dependencies:
   flutter_test:

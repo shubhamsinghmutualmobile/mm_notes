@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:mm_notes/screens/models/note.dart';
 
 class NoteDetailScreen extends StatelessWidget {
-  const NoteDetailScreen({Key? key}) : super(key: key);
+  final Note? note;
+
+  const NoteDetailScreen(this.note, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final _titleController = TextEditingController();
     final _bodyController = TextEditingController();
+
+    if (note != null) {
+      _titleController.text = note!.title;
+      _bodyController.text = note!.body;
+    }
 
     const _iconSplashRadius = 20.0;
     const _padding = 8.0;
