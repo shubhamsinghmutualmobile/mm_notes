@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mm_notes/db/database_helper.dart';
+import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/screens/landing_screen/components/staggered_grid_view.dart';
-import 'package:mm_notes/screens/models/note.dart';
 import 'package:mm_notes/screens/note_detail_screen/note_detail_screen.dart';
 
 import 'components/floating_bottom_bar.dart';
@@ -15,59 +16,65 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Note> _notes = [
-      Note(0, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(1, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(2, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(3, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(4, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(5, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(6, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(7, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(8, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(9, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(10, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(11,
-          title: "My title",
-          body: "MyBody\nThis is my new text\nThis is another text",
-          dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-      Note(12, title: "My title", body: "MyBody", dateCreated: 123456),
-    ];
-
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.lime),
-      home: LandingScreen(_notes),
+      home: const LandingScreen(),
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData(brightness: Brightness.dark),
     );
   }
 }
 
-class LandingScreen extends StatelessWidget {
-  final List<Note> notes;
+class LandingScreen extends StatefulWidget {
+  const LandingScreen({Key? key}) : super(key: key);
 
-  const LandingScreen(this.notes, {Key? key}) : super(key: key);
+  @override
+  State<LandingScreen> createState() => _LandingScreenState();
+}
+
+class _LandingScreenState extends State<LandingScreen> {
+  final DatabaseHelper db = DatabaseHelper.instance;
+  String columnId = DatabaseHelper.columnId;
+  String columnTitle = DatabaseHelper.columnTitle;
+  String columnBody = DatabaseHelper.columnBody;
+  String columnDateCreated = DatabaseHelper.columnDateCreated;
+  List<Map<String, dynamic>> mapOfNotes = [];
+
+  void refreshListOfNotes() async {
+    var dbList = await db.queryAll();
+    if (dbList != null) {
+      setState(() {
+        mapOfNotes = dbList;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refreshListOfNotes();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<Note> listOfNotes = mapOfNotes
+        .map((mapNote) => Note(mapNote[columnId],
+            title: mapNote[columnTitle],
+            body: mapNote[columnBody],
+            dateCreated: (mapNote[columnDateCreated] as int).toDouble()))
+        .toList();
+
     return Scaffold(
       appBar: const TopSearchCard(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
+          refreshListOfNotes();
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const NoteDetailScreen(null)));
+                  builder: (context) =>
+                      NoteDetailScreen(null, refreshListOfNotes)));
         },
         child: Icon(Icons.add, color: Theme.of(context).hintColor),
         backgroundColor: Theme.of(context).backgroundColor,
@@ -75,7 +82,7 @@ class LandingScreen extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: const FloatingBottomBar(),
-      body: NotesGridView(notes),
+      body: NotesGridView(listOfNotes, refreshListOfNotes),
       extendBody: true,
       extendBodyBehindAppBar: true,
     );
