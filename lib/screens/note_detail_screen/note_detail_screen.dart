@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 
@@ -20,10 +21,17 @@ class NoteDetailScreen extends StatelessWidget {
     final _titleController = TextEditingController();
     final _bodyController = TextEditingController();
 
+    DateTime currentDate = DateTime.fromMicrosecondsSinceEpoch(
+        DateTime.now().microsecondsSinceEpoch);
+
     if (note != null) {
       _titleController.text = note!.title;
       _bodyController.text = note!.body;
+      currentDate =
+          DateTime.fromMicrosecondsSinceEpoch(note!.dateCreated.toInt());
     }
+
+    var formattedDate = DateFormat('dd-MM-yyyy (kk:mm:ss)').format(currentDate);
 
     const _iconSplashRadius = 20.0;
     const _padding = 8.0;
@@ -120,7 +128,7 @@ class NoteDetailScreen extends StatelessWidget {
                     splashRadius: _iconSplashRadius),
               ],
             ),
-            const Text("Edited at 9:15 PM"),
+            Text("Edited at $formattedDate"),
             IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.more_vert),
@@ -140,12 +148,19 @@ class NoteDetailScreen extends StatelessWidget {
       String columnDateCreated,
       BuildContext context,
       String columnId) async {
+    int noteTime;
     if (note != null) {
+      if (note!.title != _titleController.text ||
+          note!.body != _bodyController.text) {
+        noteTime = DateTime.now().microsecondsSinceEpoch;
+      } else {
+        noteTime = note!.dateCreated.toInt();
+      }
       var result = await db.update({
         columnId: note!.id,
         columnTitle: _titleController.text,
         columnBody: _bodyController.text,
-        columnDateCreated: 123456
+        columnDateCreated: noteTime
       });
 
       if (result != null) {
@@ -160,7 +175,7 @@ class NoteDetailScreen extends StatelessWidget {
         var result = await db.insert({
           columnTitle: _titleController.text,
           columnBody: _bodyController.text,
-          columnDateCreated: 123456
+          columnDateCreated: DateTime.now().microsecondsSinceEpoch
         });
         if (result != null) {
           if (result != 0) {
