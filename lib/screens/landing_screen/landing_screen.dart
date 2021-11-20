@@ -7,25 +7,6 @@ import 'package:mm_notes/screens/note_detail_screen/note_detail_screen.dart';
 import 'components/floating_bottom_bar.dart';
 import 'components/top_search_card.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.lime),
-      home: const LandingScreen(),
-      debugShowCheckedModeBanner: false,
-      darkTheme: ThemeData(brightness: Brightness.dark),
-    );
-  }
-}
-
 class LandingScreen extends StatefulWidget {
   const LandingScreen({Key? key}) : super(key: key);
 
@@ -60,9 +41,9 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     List<Note> listOfNotes = mapOfNotes
         .map((mapNote) => Note(mapNote[columnId],
-            title: mapNote[columnTitle],
-            body: mapNote[columnBody],
-            dateCreated: (mapNote[columnDateCreated] as int).toDouble()))
+        title: mapNote[columnTitle],
+        body: mapNote[columnBody],
+        dateCreated: (mapNote[columnDateCreated] as int).toDouble()))
         .toList();
 
     return Scaffold(
