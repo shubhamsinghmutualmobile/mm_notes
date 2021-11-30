@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:mm_notes/db/database_helper.dart';
@@ -28,36 +29,37 @@ class NotesGridView extends StatelessWidget {
                       side: BorderSide(
                           color: Theme.of(context).hintColor.withAlpha(100)),
                       borderRadius: BorderRadius.circular(8.0)),
-                  child: InkWell(
-                    customBorder: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0)),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  NoteDetailScreen(note, refreshNotes)));
-                    },
-                    onLongPress: () {
-                      db.delete(note.id);
-                      refreshNotes();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(note.title,
-                                style: Theme.of(context).textTheme.headline6),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(note.body,
-                                style: Theme.of(context).textTheme.bodyText2),
-                          ),
-                        ],
+                  child: OpenContainer(
+                    closedElevation: 0,
+                    openBuilder: (_, __) =>
+                        NoteDetailScreen(note, refreshNotes),
+                    closedBuilder: (_, func) => InkWell(
+                      customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0)),
+                      onTap: () {
+                        func();
+                      },
+                      onLongPress: () {
+                        db.delete(note.id);
+                        refreshNotes();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(note.title,
+                                  style: Theme.of(context).textTheme.headline6),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(note.body,
+                                  style: Theme.of(context).textTheme.bodyText2),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
