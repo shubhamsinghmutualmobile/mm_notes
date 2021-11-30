@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
@@ -41,25 +42,26 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     List<Note> listOfNotes = mapOfNotes
         .map((mapNote) => Note(mapNote[columnId],
-        title: mapNote[columnTitle],
-        body: mapNote[columnBody],
-        dateCreated: (mapNote[columnDateCreated] as int).toDouble()))
+            title: mapNote[columnTitle],
+            body: mapNote[columnBody],
+            dateCreated: (mapNote[columnDateCreated] as int).toDouble()))
         .toList();
 
     return Scaffold(
       appBar: const TopSearchCard(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          refreshListOfNotes();
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      NoteDetailScreen(null, refreshListOfNotes)));
-        },
-        child: Icon(Icons.add, color: Theme.of(context).hintColor),
-        backgroundColor: Theme.of(context).backgroundColor,
-        elevation: 4,
+      floatingActionButton: OpenContainer(
+        closedShape: const CircleBorder(),
+        closedElevation: 4,
+        openBuilder: (_, __) => NoteDetailScreen(null, refreshListOfNotes),
+        closedBuilder: (_, openWidget) => FloatingActionButton(
+          onPressed: () {
+            refreshListOfNotes();
+            openWidget();
+          },
+          child: Icon(Icons.add, color: Theme.of(context).hintColor),
+          backgroundColor: Theme.of(context).backgroundColor,
+          elevation: 4,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: const FloatingBottomBar(),
