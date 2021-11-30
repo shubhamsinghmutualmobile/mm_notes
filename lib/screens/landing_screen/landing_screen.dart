@@ -46,10 +46,13 @@ class _LandingScreenState extends State<LandingScreen> {
             body: mapNote[columnBody],
             dateCreated: (mapNote[columnDateCreated] as int).toDouble()))
         .toList();
+    final _transitionColor = Theme.of(context).cardColor;
 
     return Scaffold(
       appBar: const TopSearchCard(),
       floatingActionButton: OpenContainer(
+        openColor: _transitionColor,
+        closedColor: _transitionColor,
         closedShape: const CircleBorder(),
         closedElevation: 4,
         openBuilder: (_, __) => NoteDetailScreen(null, refreshListOfNotes),

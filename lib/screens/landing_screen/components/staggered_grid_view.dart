@@ -15,13 +15,15 @@ class NotesGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DatabaseHelper db = DatabaseHelper.instance;
+    final _paddingTop = MediaQuery.of(context).padding.top * 1.1;
+    final _paddingBottom = MediaQuery.of(context).padding.bottom * 1.6;
+    final _transitionColor = Theme.of(context).cardColor;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: StaggeredGridView.count(
         crossAxisCount: 4,
-        padding: const EdgeInsets.only(
-            top: kToolbarHeight * 2.3, bottom: kToolbarHeight * 1.4),
+        padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
         children: notes
             .map((note) => Card(
                   borderOnForeground: true,
@@ -30,6 +32,8 @@ class NotesGridView extends StatelessWidget {
                           color: Theme.of(context).hintColor.withAlpha(100)),
                       borderRadius: BorderRadius.circular(8.0)),
                   child: OpenContainer(
+                    openColor: _transitionColor,
+                    closedColor: _transitionColor,
                     closedElevation: 0,
                     openBuilder: (_, __) =>
                         NoteDetailScreen(note, refreshNotes),

@@ -7,13 +7,13 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     const _padding = 8.0;
     const _splashRadius = _padding * 2.5;
+    final _topPadding = MediaQuery.of(context).padding.top;
 
     return Container(
-      margin: const EdgeInsets.only(top: kToolbarHeight),
+      margin: EdgeInsets.only(top: _topPadding),
       padding: const EdgeInsets.symmetric(horizontal: _padding),
       child: Column(
         children: [
-          const SizedBox(height: _padding - (_padding / 4)),
           Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(_padding * 4)),

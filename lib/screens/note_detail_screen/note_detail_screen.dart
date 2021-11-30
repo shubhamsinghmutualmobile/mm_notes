@@ -20,6 +20,7 @@ class NoteDetailScreen extends StatelessWidget {
 
     final _titleController = TextEditingController();
     final _bodyController = TextEditingController();
+    final _topPadding = MediaQuery.of(context).padding.top;
 
     DateTime currentDate = DateTime.fromMicrosecondsSinceEpoch(
         DateTime.now().microsecondsSinceEpoch);
@@ -44,7 +45,7 @@ class NoteDetailScreen extends StatelessWidget {
       child: Scaffold(
         body: Column(
           children: [
-            const SizedBox(height: kToolbarHeight + _padding),
+            SizedBox(height: _topPadding),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
