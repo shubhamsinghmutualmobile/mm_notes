@@ -49,8 +49,16 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
         DateTime.now().microsecondsSinceEpoch);
 
     if (widget.note != null) {
-      _titleController.text = widget.note!.title;
-      _bodyController.text = widget.note!.body;
+      if (_titleController.text != widget.note!.title) {
+        if (_titleController.text.isEmpty) {
+          _titleController.text = widget.note!.title;
+        }
+      }
+      if (_bodyController.text != widget.note!.body) {
+        if (_bodyController.text.isEmpty) {
+          _bodyController.text = widget.note!.body;
+        }
+      }
       currentDate =
           DateTime.fromMicrosecondsSinceEpoch(widget.note!.dateCreated.toInt());
     }
