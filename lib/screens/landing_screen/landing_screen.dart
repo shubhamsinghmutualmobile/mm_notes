@@ -4,6 +4,7 @@ import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/screens/landing_screen/components/staggered_grid_view.dart';
 import 'package:mm_notes/screens/note_detail_screen/note_detail_screen.dart';
+import 'package:mm_notes/utils/color_utils.dart';
 
 import 'components/floating_bottom_bar.dart';
 import 'components/top_search_card.dart';
@@ -21,6 +22,7 @@ class _LandingScreenState extends State<LandingScreen> {
   String columnTitle = DatabaseHelper.columnTitle;
   String columnBody = DatabaseHelper.columnBody;
   String columnDateCreated = DatabaseHelper.columnDateCreated;
+  String columnNoteColor = DatabaseHelper.columnNoteColor;
   List<Map<String, dynamic>> mapOfNotes = [];
   bool _isGridModeOn = true;
 
@@ -51,7 +53,8 @@ class _LandingScreenState extends State<LandingScreen> {
         .map((mapNote) => Note(mapNote[columnId],
             title: mapNote[columnTitle],
             body: mapNote[columnBody],
-            dateCreated: (mapNote[columnDateCreated] as int).toDouble()))
+            dateCreated: (mapNote[columnDateCreated] as int).toDouble(),
+            noteColor: getNoteColorFromString(mapNote[columnNoteColor])))
         .toList();
     final _transitionColor = Theme.of(context).cardColor;
 

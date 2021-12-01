@@ -12,6 +12,7 @@ class DatabaseHelper {
   static const columnTitle = "title";
   static const columnBody = "body";
   static const columnDateCreated = "dateCreated";
+  static const columnNoteColor = "noteColor";
 
   // Making it a singleton class
   DatabaseHelper._privateConstructor();
@@ -42,7 +43,8 @@ class DatabaseHelper {
       $columnId INTEGER PRIMARY KEY AUTOINCREMENT, 
       $columnTitle TEXT NOT NULL, 
       $columnBody TEXT NOT NULL, 
-      $columnDateCreated INTEGER NOT NULL
+      $columnDateCreated INTEGER NOT NULL,
+      $columnNoteColor TEXT NOT NULL
       );
       ''');
   }

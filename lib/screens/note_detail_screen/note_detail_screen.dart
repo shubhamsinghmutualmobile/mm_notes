@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
+import 'package:mm_notes/utils/color_utils.dart';
 
 class NoteDetailScreen extends StatelessWidget {
   final Note? note;
@@ -16,6 +17,9 @@ class NoteDetailScreen extends StatelessWidget {
     String columnTitle = DatabaseHelper.columnTitle;
     String columnBody = DatabaseHelper.columnBody;
     String columnDateCreated = DatabaseHelper.columnDateCreated;
+    String columnNoteColor = DatabaseHelper.columnNoteColor;
+    NoteColor currentNoteColorEnum = note?.noteColor ?? NoteColor.grey;
+    Color currentNoteColor = getColorFromNote(note, context);
     final DatabaseHelper db = DatabaseHelper.instance;
 
     final _titleController = TextEditingController();
@@ -39,102 +43,119 @@ class NoteDetailScreen extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () {
-        return _insertOrUpdateNote(db, columnTitle, _titleController,
-            columnBody, _bodyController, columnDateCreated, context, columnId);
+        return _insertOrUpdateNote(
+            db,
+            columnTitle,
+            _titleController,
+            columnBody,
+            _bodyController,
+            columnDateCreated,
+            context,
+            columnId,
+            columnNoteColor,
+            currentNoteColorEnum);
       },
       child: Scaffold(
-        body: Column(
-          children: [
-            SizedBox(height: _topPadding),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () async {
-                        await _insertOrUpdateNote(
-                            db,
-                            columnTitle,
-                            _titleController,
-                            columnBody,
-                            _bodyController,
-                            columnDateCreated,
-                            context,
-                            columnId);
-                      },
-                      icon: const Icon(Icons.arrow_back),
-                      splashRadius: _iconSplashRadius,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.push_pin_outlined),
-                        splashRadius: _iconSplashRadius),
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.add_alert_outlined),
-                        splashRadius: _iconSplashRadius),
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.archive_outlined),
-                        splashRadius: _iconSplashRadius),
-                    const SizedBox(width: _padding)
-                  ],
-                )
-              ],
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: _padding * 3),
-                child: Column(
-                  children: [
-                    TextField(
-                      maxLines: null,
-                      controller: _titleController,
-                      decoration: const InputDecoration(
-                          hintText: "Title", border: InputBorder.none),
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        maxLines: null,
-                        controller: _bodyController,
-                        decoration: const InputDecoration(
-                            hintText: "Note", border: InputBorder.none),
-                        style: Theme.of(context).textTheme.subtitle1,
+        body: Container(
+          color: currentNoteColor,
+          child: Column(
+            children: [
+              SizedBox(height: _topPadding),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          await _insertOrUpdateNote(
+                              db,
+                              columnTitle,
+                              _titleController,
+                              columnBody,
+                              _bodyController,
+                              columnDateCreated,
+                              context,
+                              columnId,
+                              columnNoteColor,
+                              currentNoteColorEnum);
+                        },
+                        icon: const Icon(Icons.arrow_back),
+                        splashRadius: _iconSplashRadius,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.push_pin_outlined),
+                          splashRadius: _iconSplashRadius),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.add_alert_outlined),
+                          splashRadius: _iconSplashRadius),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.archive_outlined),
+                          splashRadius: _iconSplashRadius),
+                      const SizedBox(width: _padding)
+                    ],
+                  )
+                ],
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: _padding * 3),
+                  child: Column(
+                    children: [
+                      TextField(
+                        maxLines: null,
+                        controller: _titleController,
+                        decoration: const InputDecoration(
+                            hintText: "Title", border: InputBorder.none),
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          maxLines: null,
+                          controller: _bodyController,
+                          decoration: const InputDecoration(
+                              hintText: "Note", border: InputBorder.none),
+                          style: Theme.of(context).textTheme.subtitle1,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        bottomNavigationBar: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add_box_outlined),
-                    splashRadius: _iconSplashRadius),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.color_lens_outlined),
-                    splashRadius: _iconSplashRadius),
-              ],
-            ),
-            Text("Edited at $formattedDate"),
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.more_vert),
-                splashRadius: _iconSplashRadius),
-          ],
+        bottomNavigationBar: Container(
+          color: currentNoteColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.add_box_outlined),
+                      splashRadius: _iconSplashRadius),
+                  IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.color_lens_outlined),
+                      splashRadius: _iconSplashRadius),
+                ],
+              ),
+              Text("Edited at $formattedDate"),
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.more_vert),
+                  splashRadius: _iconSplashRadius),
+            ],
+          ),
         ),
       ),
     );
@@ -148,7 +169,9 @@ class NoteDetailScreen extends StatelessWidget {
       TextEditingController _bodyController,
       String columnDateCreated,
       BuildContext context,
-      String columnId) async {
+      String columnId,
+      String _columnNoteColor,
+      NoteColor noteColor) async {
     int noteTime;
     if (note != null) {
       if (note!.title != _titleController.text ||
@@ -176,7 +199,8 @@ class NoteDetailScreen extends StatelessWidget {
         var result = await db.insert({
           columnTitle: _titleController.text,
           columnBody: _bodyController.text,
-          columnDateCreated: DateTime.now().microsecondsSinceEpoch
+          columnDateCreated: DateTime.now().microsecondsSinceEpoch,
+          _columnNoteColor: noteColor.toString()
         });
         if (result != null) {
           if (result != 0) {

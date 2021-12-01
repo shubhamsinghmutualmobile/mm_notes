@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/screens/note_detail_screen/note_detail_screen.dart';
+import 'package:mm_notes/utils/color_utils.dart';
 
 class NotesGridView extends StatelessWidget {
   final List<Note> notes;
@@ -59,7 +60,7 @@ class NotesGridView extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0)),
       child: OpenContainer(
         openColor: _transitionColor,
-        closedColor: _transitionColor,
+        closedColor: getColorFromNote(note, context),
         closedElevation: 0,
         openBuilder: (_, __) => NoteDetailScreen(note, refreshNotes),
         closedBuilder: (_, func) => InkWell(
