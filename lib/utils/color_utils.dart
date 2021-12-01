@@ -44,3 +44,33 @@ NoteColor getNoteColorFromString(String mapNote) {
     return NoteColor.grey;
   }
 }
+
+NoteColor getNoteColorFromColor(Color color) {
+  if (color == Colors.deepPurple) {
+    return NoteColor.violet;
+  } else if (color == Colors.indigo) {
+    return NoteColor.indigo;
+  } else if (color == Colors.blue) {
+    return NoteColor.blue;
+  } else if (color == Colors.green) {
+    return NoteColor.green;
+  } else if (color == Colors.yellow) {
+    return NoteColor.yellow;
+  } else if (color == Colors.orange) {
+    return NoteColor.orange;
+  } else if (color == Colors.red) {
+    return NoteColor.red;
+  } else {
+    return NoteColor.grey;
+  }
+}
+
+const List<Color> noteColorList = [
+  Colors.deepPurple,
+  Colors.indigo,
+  Colors.blue,
+  Colors.green,
+  Colors.yellow,
+  Colors.orange,
+  Colors.red,
+];

@@ -4,36 +4,55 @@ import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/utils/color_utils.dart';
 
-class NoteDetailScreen extends StatelessWidget {
+class NoteDetailScreen extends StatefulWidget {
   final Note? note;
   final Function refreshNotes;
 
   const NoteDetailScreen(this.note, this.refreshNotes, {Key? key})
       : super(key: key);
 
+  static const colorCardSize = 32.0;
+
+  @override
+  State<NoteDetailScreen> createState() => _NoteDetailScreenState();
+}
+
+class _NoteDetailScreenState extends State<NoteDetailScreen> {
+  final String columnId = DatabaseHelper.columnId;
+
+  final String columnTitle = DatabaseHelper.columnTitle;
+
+  final String columnBody = DatabaseHelper.columnBody;
+
+  final String columnDateCreated = DatabaseHelper.columnDateCreated;
+
+  final String columnNoteColor = DatabaseHelper.columnNoteColor;
+
+  final DatabaseHelper db = DatabaseHelper.instance;
+
+  final _titleController = TextEditingController();
+
+  final _bodyController = TextEditingController();
+
+  NoteColor? currentNoteColorEnum;
+  Color? currentNoteColor;
+
   @override
   Widget build(BuildContext context) {
-    String columnId = DatabaseHelper.columnId;
-    String columnTitle = DatabaseHelper.columnTitle;
-    String columnBody = DatabaseHelper.columnBody;
-    String columnDateCreated = DatabaseHelper.columnDateCreated;
-    String columnNoteColor = DatabaseHelper.columnNoteColor;
-    NoteColor currentNoteColorEnum = note?.noteColor ?? NoteColor.grey;
-    Color currentNoteColor = getColorFromNote(note, context);
-    final DatabaseHelper db = DatabaseHelper.instance;
+    currentNoteColorEnum ??= widget.note?.noteColor ?? NoteColor.grey;
 
-    final _titleController = TextEditingController();
-    final _bodyController = TextEditingController();
+    currentNoteColor ??= getColorFromNote(widget.note, context);
+
     final _topPadding = MediaQuery.of(context).padding.top;
 
     DateTime currentDate = DateTime.fromMicrosecondsSinceEpoch(
         DateTime.now().microsecondsSinceEpoch);
 
-    if (note != null) {
-      _titleController.text = note!.title;
-      _bodyController.text = note!.body;
+    if (widget.note != null) {
+      _titleController.text = widget.note!.title;
+      _bodyController.text = widget.note!.body;
       currentDate =
-          DateTime.fromMicrosecondsSinceEpoch(note!.dateCreated.toInt());
+          DateTime.fromMicrosecondsSinceEpoch(widget.note!.dateCreated.toInt());
     }
 
     var formattedDate = DateFormat('dd-MM-yyyy (kk:mm:ss)').format(currentDate);
@@ -144,7 +163,71 @@ class NoteDetailScreen extends StatelessWidget {
                       icon: const Icon(Icons.add_box_outlined),
                       splashRadius: _iconSplashRadius),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showModalBottomSheet(
+                            constraints: const BoxConstraints.tightForFinite(
+                                height: 100),
+                            backgroundColor: currentNoteColor,
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                padding: const EdgeInsets.only(top: 8, left: 8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8, left: 8, bottom: 8),
+                                      child: Text(
+                                        "Color",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1,
+                                      ),
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: noteColorList
+                                          .map((noteColor) => InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    Navigator.pop(context);
+                                                    currentNoteColor =
+                                                        noteColor;
+                                                    currentNoteColorEnum =
+                                                        getNoteColorFromColor(
+                                                            noteColor);
+                                                  });
+                                                },
+                                                child: Card(
+                                                  shape: CircleBorder(
+                                                      side: BorderSide(
+                                                          width: 0.5,
+                                                          color:
+                                                              Theme.of(context)
+                                                                      .textTheme
+                                                                      .bodyText1
+                                                                      ?.color ??
+                                                                  Colors
+                                                                      .black)),
+                                                  elevation: 0,
+                                                  color: noteColor,
+                                                  child: const SizedBox(
+                                                    width: NoteDetailScreen
+                                                        .colorCardSize,
+                                                    height: NoteDetailScreen
+                                                        .colorCardSize,
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            });
+                      },
                       icon: const Icon(Icons.color_lens_outlined),
                       splashRadius: _iconSplashRadius),
                 ],
@@ -170,26 +253,27 @@ class NoteDetailScreen extends StatelessWidget {
       String columnDateCreated,
       BuildContext context,
       String columnId,
-      String _columnNoteColor,
-      NoteColor noteColor) async {
+      String columnNoteColor,
+      NoteColor? noteColor) async {
     int noteTime;
-    if (note != null) {
-      if (note!.title != _titleController.text ||
-          note!.body != _bodyController.text) {
+    if (widget.note != null) {
+      if (widget.note!.title != _titleController.text ||
+          widget.note!.body != _bodyController.text) {
         noteTime = DateTime.now().microsecondsSinceEpoch;
       } else {
-        noteTime = note!.dateCreated.toInt();
+        noteTime = widget.note!.dateCreated.toInt();
       }
       var result = await db.update({
-        columnId: note!.id,
+        columnId: widget.note!.id,
         columnTitle: _titleController.text,
         columnBody: _bodyController.text,
-        columnDateCreated: noteTime
+        columnDateCreated: noteTime,
+        columnNoteColor: noteColor.toString()
       });
 
       if (result != null) {
         if (result != 0) {
-          refreshNotes();
+          widget.refreshNotes();
         } else {
           print("Couldn't update note!");
         }
@@ -200,11 +284,11 @@ class NoteDetailScreen extends StatelessWidget {
           columnTitle: _titleController.text,
           columnBody: _bodyController.text,
           columnDateCreated: DateTime.now().microsecondsSinceEpoch,
-          _columnNoteColor: noteColor.toString()
+          columnNoteColor: noteColor.toString()
         });
         if (result != null) {
           if (result != 0) {
-            refreshNotes();
+            widget.refreshNotes();
           } else {
             print("Couldn't insert note!");
           }
