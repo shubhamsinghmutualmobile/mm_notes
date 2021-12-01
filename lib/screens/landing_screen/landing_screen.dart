@@ -22,6 +22,13 @@ class _LandingScreenState extends State<LandingScreen> {
   String columnBody = DatabaseHelper.columnBody;
   String columnDateCreated = DatabaseHelper.columnDateCreated;
   List<Map<String, dynamic>> mapOfNotes = [];
+  bool _isGridModeOn = true;
+
+  void toggleGridMode() {
+    setState(() {
+      _isGridModeOn = !_isGridModeOn;
+    });
+  }
 
   void refreshListOfNotes() async {
     var dbList = await db.queryAll();
@@ -49,7 +56,7 @@ class _LandingScreenState extends State<LandingScreen> {
     final _transitionColor = Theme.of(context).cardColor;
 
     return Scaffold(
-      appBar: const TopSearchCard(),
+      appBar: TopSearchCard(toggleGridMode, _isGridModeOn),
       floatingActionButton: OpenContainer(
         openColor: _transitionColor,
         closedColor: _transitionColor,
@@ -68,7 +75,7 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: const FloatingBottomBar(),
-      body: NotesGridView(listOfNotes, refreshListOfNotes),
+      body: NotesGridView(listOfNotes, refreshListOfNotes, _isGridModeOn),
       extendBody: true,
       extendBodyBehindAppBar: true,
     );

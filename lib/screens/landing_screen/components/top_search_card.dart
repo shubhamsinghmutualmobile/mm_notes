@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
-  const TopSearchCard({Key? key}) : super(key: key);
+  final Function toggleGridMode;
+  final bool isGridModeOn;
+
+  const TopSearchCard(this.toggleGridMode, this.isGridModeOn, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +44,10 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
                     Row(
                       children: [
                         IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.view_agenda_outlined),
+                          onPressed: () {
+                            toggleGridMode();
+                          },
+                          icon: getToggleIcon(),
                           splashRadius: _splashRadius,
                         ),
                         Container(
@@ -69,6 +75,14 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
         ],
       ),
     );
+  }
+
+  Icon getToggleIcon() {
+    if (isGridModeOn) {
+      return const Icon(Icons.view_agenda_outlined);
+    } else {
+      return const Icon(Icons.grid_view);
+    }
   }
 
   @override
