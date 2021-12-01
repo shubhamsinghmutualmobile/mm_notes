@@ -4,6 +4,9 @@ import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/utils/color_utils.dart';
 
+import 'components/detail_screen_bottom_bar.dart';
+import 'components/detail_screen_top_bar.dart';
+
 class NoteDetailScreen extends StatefulWidget {
   final Note? note;
   final Function refreshNotes;
@@ -11,27 +14,20 @@ class NoteDetailScreen extends StatefulWidget {
   const NoteDetailScreen(this.note, this.refreshNotes, {Key? key})
       : super(key: key);
 
-  static const colorCardSize = 32.0;
-
   @override
   State<NoteDetailScreen> createState() => _NoteDetailScreenState();
 }
 
 class _NoteDetailScreenState extends State<NoteDetailScreen> {
-  final String columnId = DatabaseHelper.columnId;
-
-  final String columnTitle = DatabaseHelper.columnTitle;
-
-  final String columnBody = DatabaseHelper.columnBody;
-
-  final String columnDateCreated = DatabaseHelper.columnDateCreated;
-
-  final String columnNoteColor = DatabaseHelper.columnNoteColor;
+  static const String columnId = DatabaseHelper.columnId;
+  static const String columnTitle = DatabaseHelper.columnTitle;
+  static const String columnBody = DatabaseHelper.columnBody;
+  static const String columnDateCreated = DatabaseHelper.columnDateCreated;
+  static const String columnNoteColor = DatabaseHelper.columnNoteColor;
 
   final DatabaseHelper db = DatabaseHelper.instance;
 
   final _titleController = TextEditingController();
-
   final _bodyController = TextEditingController();
 
   NoteColor? currentNoteColorEnum;
@@ -48,25 +44,9 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
     DateTime currentDate = DateTime.fromMicrosecondsSinceEpoch(
         DateTime.now().microsecondsSinceEpoch);
 
-    if (widget.note != null) {
-      if (_titleController.text != widget.note!.title) {
-        if (_titleController.text.isEmpty) {
-          _titleController.text = widget.note!.title;
-        }
-      }
-      if (_bodyController.text != widget.note!.body) {
-        if (_bodyController.text.isEmpty) {
-          _bodyController.text = widget.note!.body;
-        }
-      }
-      currentDate =
-          DateTime.fromMicrosecondsSinceEpoch(widget.note!.dateCreated.toInt());
-    }
+    currentDate = setupInitialViews(currentDate);
 
     var formattedDate = DateFormat('dd-MM-yyyy (kk:mm:ss)').format(currentDate);
-
-    const _iconSplashRadius = 20.0;
-    const _padding = 8.0;
 
     return WillPopScope(
       onWillPop: () {
@@ -85,171 +65,49 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
       child: Scaffold(
         body: Container(
           color: currentNoteColor,
-          child: Column(
-            children: [
-              SizedBox(height: _topPadding),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          await _insertOrUpdateNote(
-                              db,
-                              columnTitle,
-                              _titleController,
-                              columnBody,
-                              _bodyController,
-                              columnDateCreated,
-                              context,
-                              columnId,
-                              columnNoteColor,
-                              currentNoteColorEnum);
-                        },
-                        icon: const Icon(Icons.arrow_back),
-                        splashRadius: _iconSplashRadius,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.push_pin_outlined),
-                          splashRadius: _iconSplashRadius),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.add_alert_outlined),
-                          splashRadius: _iconSplashRadius),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.archive_outlined),
-                          splashRadius: _iconSplashRadius),
-                      const SizedBox(width: _padding)
-                    ],
-                  )
-                ],
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: _padding * 3),
-                  child: Column(
-                    children: [
-                      TextField(
-                        maxLines: null,
-                        controller: _titleController,
-                        decoration: const InputDecoration(
-                            hintText: "Title", border: InputBorder.none),
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          maxLines: null,
-                          controller: _bodyController,
-                          decoration: const InputDecoration(
-                              hintText: "Note", border: InputBorder.none),
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+          child: detailScreenTopBar(
+              _topPadding,
+              context,
+              db,
+              columnTitle,
+              _titleController,
+              columnBody,
+              _bodyController,
+              columnDateCreated,
+              columnId,
+              columnNoteColor,
+              currentNoteColorEnum,
+              _insertOrUpdateNote),
         ),
-        bottomNavigationBar: Container(
-          color: currentNoteColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.add_box_outlined),
-                      splashRadius: _iconSplashRadius),
-                  IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                            constraints: const BoxConstraints.tightForFinite(
-                                height: 100),
-                            backgroundColor: currentNoteColor,
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                padding: const EdgeInsets.only(top: 8, left: 8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8, left: 8, bottom: 8),
-                                      child: Text(
-                                        "Color",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1,
-                                      ),
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: noteColorList
-                                          .map((noteColor) => InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    Navigator.pop(context);
-                                                    currentNoteColor =
-                                                        noteColor;
-                                                    currentNoteColorEnum =
-                                                        getNoteColorFromColor(
-                                                            noteColor);
-                                                  });
-                                                },
-                                                child: Card(
-                                                  shape: CircleBorder(
-                                                      side: BorderSide(
-                                                          width: 0.5,
-                                                          color:
-                                                              Theme.of(context)
-                                                                      .textTheme
-                                                                      .bodyText1
-                                                                      ?.color ??
-                                                                  Colors
-                                                                      .black)),
-                                                  elevation: 0,
-                                                  color: noteColor,
-                                                  child: const SizedBox(
-                                                    width: NoteDetailScreen
-                                                        .colorCardSize,
-                                                    height: NoteDetailScreen
-                                                        .colorCardSize,
-                                                  ),
-                                                ),
-                                              ))
-                                          .toList(),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
-                      },
-                      icon: const Icon(Icons.color_lens_outlined),
-                      splashRadius: _iconSplashRadius),
-                ],
-              ),
-              Text("Edited at $formattedDate"),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.more_vert),
-                  splashRadius: _iconSplashRadius),
-            ],
-          ),
-        ),
+        bottomNavigationBar: detailScreenBottomBar(
+            context, formattedDate, currentNoteColor, currentNoteColorEnum,
+            (Color noteColor) {
+          setState(() {
+            Navigator.pop(context);
+            currentNoteColor = noteColor;
+            currentNoteColorEnum = getNoteColorFromColor(noteColor);
+          });
+        }),
       ),
     );
+  }
+
+  DateTime setupInitialViews(DateTime currentDate) {
+    if (widget.note != null) {
+      if (_titleController.text != widget.note!.title) {
+        if (_titleController.text.isEmpty) {
+          _titleController.text = widget.note!.title;
+        }
+      }
+      if (_bodyController.text != widget.note!.body) {
+        if (_bodyController.text.isEmpty) {
+          _bodyController.text = widget.note!.body;
+        }
+      }
+      currentDate =
+          DateTime.fromMicrosecondsSinceEpoch(widget.note!.dateCreated.toInt());
+    }
+    return currentDate;
   }
 
   Future<bool> _insertOrUpdateNote(
