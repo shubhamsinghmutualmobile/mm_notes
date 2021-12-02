@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mm_notes/controllers/detail_screen_controller.dart';
 import 'package:mm_notes/screens/note_detail_screen/components/tappable_color_card.dart';
 import 'package:mm_notes/utils/color_utils.dart';
 
-void showBottomColorSheet(
-    Color? currentNoteColor, BuildContext context, Function onColorTap) {
+void showBottomColorSheet(BuildContext context, Function onColorTap) {
+  final DetailScreenController dsc = Get.put(DetailScreenController());
+  var currentNoteColor = dsc.currentNoteColor;
   showModalBottomSheet(
       constraints: const BoxConstraints.tightForFinite(height: 100),
-      backgroundColor: currentNoteColor,
+      backgroundColor: currentNoteColor?.value,
       context: context,
       builder: (context) {
         return Container(

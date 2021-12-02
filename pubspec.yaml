@@ -17,6 +17,7 @@ dependencies:
   flutter_staggered_grid_view:
   intl:
   animations: ^2.0.2
+  get:
 
 dev_dependencies:
   flutter_test:

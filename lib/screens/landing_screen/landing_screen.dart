@@ -1,5 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mm_notes/controllers/detail_screen_controller.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/screens/landing_screen/components/staggered_grid_view.dart';
@@ -17,12 +19,15 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
+
   final DatabaseHelper db = DatabaseHelper.instance;
+
   String columnId = DatabaseHelper.columnId;
   String columnTitle = DatabaseHelper.columnTitle;
   String columnBody = DatabaseHelper.columnBody;
   String columnDateCreated = DatabaseHelper.columnDateCreated;
   String columnNoteColor = DatabaseHelper.columnNoteColor;
+
   List<Map<String, dynamic>> mapOfNotes = [];
   bool _isGridModeOn = true;
 
@@ -49,6 +54,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final DetailScreenController dsc = Get.put(DetailScreenController());
+
     List<Note> listOfNotes = mapOfNotes
         .map((mapNote) => Note(mapNote[columnId],
             title: mapNote[columnTitle],
@@ -68,6 +75,7 @@ class _LandingScreenState extends State<LandingScreen> {
         openBuilder: (_, __) => NoteDetailScreen(null, refreshListOfNotes),
         closedBuilder: (_, openWidget) => FloatingActionButton(
           onPressed: () {
+            dsc.resetData();
             refreshListOfNotes();
             openWidget();
           },

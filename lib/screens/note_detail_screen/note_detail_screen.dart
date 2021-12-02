@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import 'package:mm_notes/controllers/detail_screen_controller.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/utils/color_utils.dart';
@@ -7,105 +8,79 @@ import 'package:mm_notes/utils/color_utils.dart';
 import 'components/detail_screen_bottom_bar.dart';
 import 'components/detail_screen_top_bar.dart';
 
-class NoteDetailScreen extends StatefulWidget {
+class NoteDetailScreen extends StatelessWidget {
   final Note? note;
   final Function refreshNotes;
 
   const NoteDetailScreen(this.note, this.refreshNotes, {Key? key})
       : super(key: key);
 
-  @override
-  State<NoteDetailScreen> createState() => _NoteDetailScreenState();
-}
-
-class _NoteDetailScreenState extends State<NoteDetailScreen> {
   static const String columnId = DatabaseHelper.columnId;
   static const String columnTitle = DatabaseHelper.columnTitle;
   static const String columnBody = DatabaseHelper.columnBody;
   static const String columnDateCreated = DatabaseHelper.columnDateCreated;
   static const String columnNoteColor = DatabaseHelper.columnNoteColor;
 
-  final DatabaseHelper db = DatabaseHelper.instance;
-
-  final _titleController = TextEditingController();
-  final _bodyController = TextEditingController();
-
-  NoteColor? currentNoteColorEnum;
-  Color? currentNoteColor;
-
   @override
   Widget build(BuildContext context) {
-    currentNoteColorEnum ??= widget.note?.noteColor ?? NoteColor.grey;
+    final DetailScreenController dsc = Get.put(DetailScreenController());
+    final _titleController = dsc.titleController;
+    final _bodyController = dsc.bodyController;
+    final DatabaseHelper db = dsc.db;
 
-    currentNoteColor ??= getColorFromNote(widget.note, context);
+    dsc.currentNoteColorEnum = note?.noteColor ?? NoteColor.grey;
+
+    dsc.currentNoteColor = getColorFromNote(note, context).obs;
 
     final _topPadding = MediaQuery.of(context).padding.top;
 
-    DateTime currentDate = DateTime.fromMicrosecondsSinceEpoch(
-        DateTime.now().microsecondsSinceEpoch);
-
-    currentDate = setupInitialViews(currentDate);
-
-    var formattedDate = DateFormat('dd-MM-yyyy (kk:mm:ss)').format(currentDate);
+    dsc.currentDate = setupInitialViews(
+        dsc.currentDate, _titleController.value, _bodyController.value);
 
     return WillPopScope(
       onWillPop: () {
         return _insertOrUpdateNote(
             db,
             columnTitle,
-            _titleController,
+            _titleController.value,
             columnBody,
-            _bodyController,
+            _bodyController.value,
             columnDateCreated,
             context,
             columnId,
             columnNoteColor,
-            currentNoteColorEnum);
+            dsc.currentNoteColorEnum);
       },
       child: Scaffold(
-        body: Container(
-          color: currentNoteColor,
-          child: detailScreenTopBar(
-              _topPadding,
-              context,
-              db,
-              columnTitle,
-              _titleController,
-              columnBody,
-              _bodyController,
-              columnDateCreated,
-              columnId,
-              columnNoteColor,
-              currentNoteColorEnum,
-              _insertOrUpdateNote),
+        body: Obx(
+          () => Container(
+            color: dsc.currentNoteColor?.value,
+            child:
+                detailScreenTopBar(_topPadding, context, _insertOrUpdateNote),
+          ),
         ),
-        bottomNavigationBar: detailScreenBottomBar(
-            context, formattedDate, currentNoteColor, currentNoteColorEnum,
-            (Color noteColor) {
-          setState(() {
-            Navigator.pop(context);
-            currentNoteColor = noteColor;
-            currentNoteColorEnum = getNoteColorFromColor(noteColor);
-          });
+        bottomNavigationBar: detailScreenBottomBar(context, (Color noteColor) {
+          Navigator.pop(context);
+          dsc.currentNoteColor?.value = noteColor;
+          dsc.currentNoteColorEnum = getNoteColorFromColor(noteColor);
         }),
       ),
     );
   }
 
-  DateTime setupInitialViews(DateTime currentDate) {
-    if (widget.note != null) {
-      if (_titleController.text != widget.note!.title) {
-        if (_titleController.text.isEmpty) {
-          _titleController.text = widget.note!.title;
-        }
+  DateTime setupInitialViews(
+      DateTime currentDate,
+      TextEditingController _titleController,
+      TextEditingController _bodyController) {
+    if (note != null) {
+      if (_titleController.text != note!.title) {
+        _titleController.text = note!.title;
       }
-      if (_bodyController.text != widget.note!.body) {
-        if (_bodyController.text.isEmpty) {
-          _bodyController.text = widget.note!.body;
-        }
+      if (_bodyController.text != note!.body) {
+        _bodyController.text = note!.body;
       }
       currentDate =
-          DateTime.fromMicrosecondsSinceEpoch(widget.note!.dateCreated.toInt());
+          DateTime.fromMicrosecondsSinceEpoch(note!.dateCreated.toInt());
     }
     return currentDate;
   }
@@ -122,15 +97,15 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
       String columnNoteColor,
       NoteColor? noteColor) async {
     int noteTime;
-    if (widget.note != null) {
-      if (widget.note!.title != _titleController.text ||
-          widget.note!.body != _bodyController.text) {
+    if (note != null) {
+      if (note!.title != _titleController.text ||
+          note!.body != _bodyController.text) {
         noteTime = DateTime.now().microsecondsSinceEpoch;
       } else {
-        noteTime = widget.note!.dateCreated.toInt();
+        noteTime = note!.dateCreated.toInt();
       }
       var result = await db.update({
-        columnId: widget.note!.id,
+        columnId: note!.id,
         columnTitle: _titleController.text,
         columnBody: _bodyController.text,
         columnDateCreated: noteTime,
@@ -139,7 +114,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
 
       if (result != null) {
         if (result != 0) {
-          widget.refreshNotes();
+          refreshNotes();
         } else {
           print("Couldn't update note!");
         }
@@ -154,7 +129,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
         });
         if (result != null) {
           if (result != 0) {
-            widget.refreshNotes();
+            refreshNotes();
           } else {
             print("Couldn't insert note!");
           }
