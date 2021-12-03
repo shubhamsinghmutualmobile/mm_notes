@@ -24,78 +24,60 @@ class NoteDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DetailScreenController dsc = Get.put(DetailScreenController());
-    final _titleController = dsc.titleController;
-    final _bodyController = dsc.bodyController;
-    final DatabaseHelper db = dsc.db;
 
-    dsc.currentNoteColorEnum = note?.noteColor ?? NoteColor.grey;
-
-    dsc.currentNoteColor = getColorFromNote(note, context).obs;
-
-    final _topPadding = MediaQuery.of(context).padding.top;
-
-    dsc.currentDate = setupInitialViews(
-        dsc.currentDate, _titleController.value, _bodyController.value);
+    setupInitialViews(dsc, context);
 
     return WillPopScope(
       onWillPop: () {
-        return _insertOrUpdateNote(
-            db,
-            columnTitle,
-            _titleController.value,
-            columnBody,
-            _bodyController.value,
-            columnDateCreated,
-            context,
-            columnId,
-            columnNoteColor,
-            dsc.currentNoteColorEnum);
+        return _insertOrUpdateNote(context, dsc);
       },
       child: Scaffold(
         body: Obx(
           () => Container(
             color: dsc.currentNoteColor?.value,
-            child:
-                detailScreenTopBar(_topPadding, context, _insertOrUpdateNote),
+            child: detailScreenTopBar(context, _insertOrUpdateNote),
           ),
         ),
-        bottomNavigationBar: detailScreenBottomBar(context, (Color noteColor) {
-          Navigator.pop(context);
-          dsc.currentNoteColor?.value = noteColor;
-          dsc.currentNoteColorEnum = getNoteColorFromColor(noteColor);
-        }),
+        bottomNavigationBar: Obx(() => Container(
+              color: dsc.currentNoteColor?.value,
+              child: detailScreenBottomBar(context, (Color noteColor) {
+                Navigator.pop(context);
+                dsc.currentNoteColor?.value = noteColor;
+                dsc.currentNoteColorEnum = getNoteColorFromColor(noteColor);
+              }),
+            )),
       ),
     );
   }
 
-  DateTime setupInitialViews(
-      DateTime currentDate,
-      TextEditingController _titleController,
-      TextEditingController _bodyController) {
+  void setupInitialViews(DetailScreenController dsc, BuildContext context) {
+    var _titleController = dsc.titleController.value;
+    var _bodyController = dsc.bodyController.value;
+
+    dsc.currentNoteColorEnum ??= note?.noteColor ?? NoteColor.grey;
+
+    dsc.currentNoteColor ??= getColorFromNote(note, context).obs;
+
     if (note != null) {
-      if (_titleController.text != note!.title) {
+      if (_titleController.text != note!.title &&
+          _titleController.text.isEmpty) {
         _titleController.text = note!.title;
       }
-      if (_bodyController.text != note!.body) {
+      if (_bodyController.text != note!.body && _bodyController.text.isEmpty) {
         _bodyController.text = note!.body;
       }
-      currentDate =
+      dsc.currentDate =
           DateTime.fromMicrosecondsSinceEpoch(note!.dateCreated.toInt());
     }
-    return currentDate;
   }
 
   Future<bool> _insertOrUpdateNote(
-      DatabaseHelper db,
-      String columnTitle,
-      TextEditingController _titleController,
-      String columnBody,
-      TextEditingController _bodyController,
-      String columnDateCreated,
-      BuildContext context,
-      String columnId,
-      String columnNoteColor,
-      NoteColor? noteColor) async {
+      BuildContext context, DetailScreenController dsc) async {
+    var _db = dsc.db;
+    var _titleController = dsc.titleController.value;
+    var _bodyController = dsc.bodyController.value;
+    var _currentNoteColorEnum = dsc.currentNoteColorEnum;
+
     int noteTime;
     if (note != null) {
       if (note!.title != _titleController.text ||
@@ -104,12 +86,12 @@ class NoteDetailScreen extends StatelessWidget {
       } else {
         noteTime = note!.dateCreated.toInt();
       }
-      var result = await db.update({
+      var result = await _db.update({
         columnId: note!.id,
         columnTitle: _titleController.text,
         columnBody: _bodyController.text,
         columnDateCreated: noteTime,
-        columnNoteColor: noteColor.toString()
+        columnNoteColor: _currentNoteColorEnum.toString()
       });
 
       if (result != null) {
@@ -121,11 +103,11 @@ class NoteDetailScreen extends StatelessWidget {
       }
     } else {
       if (_titleController.text.isNotEmpty || _bodyController.text.isNotEmpty) {
-        var result = await db.insert({
+        var result = await _db.insert({
           columnTitle: _titleController.text,
           columnBody: _bodyController.text,
           columnDateCreated: DateTime.now().microsecondsSinceEpoch,
-          columnNoteColor: noteColor.toString()
+          columnNoteColor: _currentNoteColorEnum.toString()
         });
         if (result != null) {
           if (result != 0) {

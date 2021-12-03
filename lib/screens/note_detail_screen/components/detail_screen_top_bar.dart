@@ -1,27 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mm_notes/controllers/detail_screen_controller.dart';
-import 'package:mm_notes/db/database_helper.dart';
-import 'package:mm_notes/models/note.dart';
 
 const iconSplashRadius = 20.0;
 const padding = 8.0;
 
-Column detailScreenTopBar(
-    double _topPadding, BuildContext context, Function _insertOrUpdateNote) {
+Column detailScreenTopBar(BuildContext context, Function _insertOrUpdateNote) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
 
-  DatabaseHelper db = dsc.db;
-  NoteColor? currentNoteColorEnum = dsc.currentNoteColorEnum;
+  final _topPadding = MediaQuery.of(context).padding.top;
 
   final _titleController = dsc.titleController.value;
   final _bodyController = dsc.bodyController.value;
-
-  const String columnId = DatabaseHelper.columnId;
-  const String columnTitle = DatabaseHelper.columnTitle;
-  const String columnBody = DatabaseHelper.columnBody;
-  const String columnDateCreated = DatabaseHelper.columnDateCreated;
-  const String columnNoteColor = DatabaseHelper.columnNoteColor;
 
   return Column(
     children: [
@@ -33,17 +23,7 @@ Column detailScreenTopBar(
             children: [
               IconButton(
                 onPressed: () {
-                  _insertOrUpdateNote(
-                      db,
-                      columnTitle,
-                      _titleController,
-                      columnBody,
-                      _bodyController,
-                      columnDateCreated,
-                      context,
-                      columnId,
-                      columnNoteColor,
-                      currentNoteColorEnum);
+                  _insertOrUpdateNote(context, dsc);
                 },
                 icon: const Icon(Icons.arrow_back),
                 splashRadius: iconSplashRadius,

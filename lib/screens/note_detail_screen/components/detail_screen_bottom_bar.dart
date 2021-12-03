@@ -11,34 +11,28 @@ Widget detailScreenBottomBar(BuildContext context, Function onColorTap) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
   var formattedDate =
       DateFormat('dd-MM-yyyy (kk:mm:ss)').format(dsc.currentDate);
-  var currentNoteColor = dsc.currentNoteColor;
-  return Obx(
-    () => Container(
-      color: currentNoteColor?.value,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
         children: [
-          Row(
-            children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add_box_outlined),
-                  splashRadius: iconSplashRadius),
-              IconButton(
-                  onPressed: () {
-                    showBottomColorSheet(context, onColorTap);
-                  },
-                  icon: const Icon(Icons.color_lens_outlined),
-                  splashRadius: iconSplashRadius),
-            ],
-          ),
-          Text("Edited at $formattedDate"),
           IconButton(
               onPressed: () {},
-              icon: const Icon(Icons.more_vert),
+              icon: const Icon(Icons.add_box_outlined),
+              splashRadius: iconSplashRadius),
+          IconButton(
+              onPressed: () {
+                showBottomColorSheet(context, onColorTap);
+              },
+              icon: const Icon(Icons.color_lens_outlined),
               splashRadius: iconSplashRadius),
         ],
       ),
-    ),
+      Text("Edited at $formattedDate"),
+      IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.more_vert),
+          splashRadius: iconSplashRadius),
+    ],
   );
 }
