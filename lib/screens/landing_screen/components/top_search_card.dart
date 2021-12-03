@@ -21,7 +21,7 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
           Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(_padding * 4)),
-              elevation: _padding / 2,
+              elevation: 0,
               child: InkWell(
                 customBorder: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(_padding * 4)),
@@ -32,7 +32,9 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
                     Row(
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
                           icon: const Icon(Icons.menu),
                           splashRadius: _splashRadius,
                         ),

@@ -28,6 +28,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
     final _transitionColor = Theme.of(context).cardColor;
 
+    final _topPadding = MediaQuery.of(context).padding.top;
+
     return Scaffold(
       appBar: TopSearchCard(),
       floatingActionButton: OpenContainer(
@@ -52,6 +54,37 @@ class _LandingScreenState extends State<LandingScreen> {
       body: NotesGridView(),
       extendBody: true,
       extendBodyBehindAppBar: true,
+      drawer: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: _topPadding,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12, left: 16),
+              child: Row(
+                children: const [
+                  Text(
+                    "Google",
+                    style: TextStyle(
+                        fontFamily: 'ProductSans',
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    " Keep",
+                    style: TextStyle(
+                      fontFamily: 'ProductSans',
+                      fontSize: 24,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
