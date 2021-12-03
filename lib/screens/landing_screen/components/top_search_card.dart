@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mm_notes/controllers/landing_screen_controller.dart';
 
 class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
-  final Function toggleGridMode;
-  final bool isGridModeOn;
+  TopSearchCard({Key? key}) : super(key: key);
 
-  const TopSearchCard(this.toggleGridMode, this.isGridModeOn, {Key? key})
-      : super(key: key);
+  final LandingScreenController lsc = Get.put(LandingScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +43,14 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
                     // Circular profile button
                     Row(
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            toggleGridMode();
-                          },
-                          icon: getToggleIcon(),
-                          splashRadius: _splashRadius,
+                        Obx(
+                          () => IconButton(
+                            onPressed: () {
+                              lsc.toggleGridMode();
+                            },
+                            icon: lsc.gridModeIcon.value,
+                            splashRadius: _splashRadius,
+                          ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(right: _padding),
@@ -75,14 +77,6 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
         ],
       ),
     );
-  }
-
-  Icon getToggleIcon() {
-    if (isGridModeOn) {
-      return const Icon(Icons.view_agenda_outlined);
-    } else {
-      return const Icon(Icons.grid_view);
-    }
   }
 
   @override

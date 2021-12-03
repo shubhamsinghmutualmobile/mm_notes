@@ -1,54 +1,57 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/get.dart';
+import 'package:mm_notes/controllers/landing_screen_controller.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/screens/note_detail_screen/note_detail_screen.dart';
 import 'package:mm_notes/utils/color_utils.dart';
 
 class NotesGridView extends StatelessWidget {
-  final List<Note> notes;
-  final Function refreshNotes;
-  final bool isGridModeOn;
+  NotesGridView({Key? key}) : super(key: key);
 
-  const NotesGridView(this.notes, this.refreshNotes, this.isGridModeOn,
-      {Key? key})
-      : super(key: key);
+  final LandingScreenController lsc = Get.put(LandingScreenController());
 
   @override
   Widget build(BuildContext context) {
-    final DatabaseHelper db = DatabaseHelper.instance;
+    final DatabaseHelper db = lsc.db;
+
+    var notes = lsc.listOfNotes;
+
     final _paddingTop = MediaQuery.of(context).padding.top * 1.1;
     final _paddingBottom = MediaQuery.of(context).padding.bottom * 1.6;
     final _transitionColor = Theme.of(context).cardColor;
 
-    if (isGridModeOn) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: StaggeredGridView.count(
-          crossAxisCount: 4,
-          padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
-          children: notes
-              .map((note) => noteCard(context, _transitionColor, note, db))
-              .toList(),
-          staggeredTiles: notes
-              .map<StaggeredTile>((_) => const StaggeredTile.fit(2))
-              .toList(),
-          mainAxisSpacing: 3.0,
-          crossAxisSpacing: 4.0,
-        ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ListView(
-          padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
-          children: notes
-              .map((note) => noteCard(context, _transitionColor, note, db))
-              .toList(),
-        ),
-      );
-    }
+    return Obx(() {
+      if (!lsc.isGridModeOn.value) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: StaggeredGridView.count(
+            crossAxisCount: 4,
+            padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
+            children: notes
+                .map((note) => noteCard(context, _transitionColor, note, db))
+                .toList(),
+            staggeredTiles: notes
+                .map<StaggeredTile>((_) => const StaggeredTile.fit(2))
+                .toList(),
+            mainAxisSpacing: 3.0,
+            crossAxisSpacing: 4.0,
+          ),
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ListView(
+            padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
+            children: notes
+                .map((note) => noteCard(context, _transitionColor, note, db))
+                .toList(),
+          ),
+        );
+      }
+    });
   }
 
   Card noteCard(BuildContext context, Color _transitionColor, Note note,
@@ -62,7 +65,7 @@ class NotesGridView extends StatelessWidget {
         openColor: _transitionColor,
         closedColor: getColorFromNote(note, context),
         closedElevation: 0,
-        openBuilder: (_, __) => NoteDetailScreen(note, refreshNotes),
+        openBuilder: (_, __) => NoteDetailScreen(note, lsc.refreshListOfNotes),
         closedBuilder: (_, func) => InkWell(
           customBorder:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -71,7 +74,7 @@ class NotesGridView extends StatelessWidget {
           },
           onLongPress: () {
             db.delete(note.id);
-            refreshNotes();
+            lsc.refreshListOfNotes();
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
