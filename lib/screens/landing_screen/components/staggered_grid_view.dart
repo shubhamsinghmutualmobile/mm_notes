@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:mm_notes/controllers/detail_screen_controller.dart';
 import 'package:mm_notes/controllers/landing_screen_controller.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
@@ -12,6 +13,7 @@ class NotesGridView extends StatelessWidget {
   NotesGridView({Key? key}) : super(key: key);
 
   final LandingScreenController lsc = Get.put(LandingScreenController());
+  final DetailScreenController dsc = Get.put(DetailScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -24,34 +26,58 @@ class NotesGridView extends StatelessWidget {
     final _transitionColor = Theme.of(context).cardColor;
 
     return Obx(() {
-      if (!lsc.isGridModeOn.value) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: StaggeredGridView.count(
-            crossAxisCount: 4,
-            padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
-            children: notes
-                .map((note) => noteCard(context, _transitionColor, note, db))
-                .toList(),
-            staggeredTiles: notes
-                .map<StaggeredTile>((_) => const StaggeredTile.fit(2))
-                .toList(),
-            mainAxisSpacing: 3.0,
-            crossAxisSpacing: 4.0,
-          ),
-        );
-      } else {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: ListView(
-            padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
-            children: notes
-                .map((note) => noteCard(context, _transitionColor, note, db))
-                .toList(),
-          ),
-        );
-      }
+      return AnimatedCrossFade(
+          crossFadeState: !lsc.isGridModeOn.value
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
+          duration: const Duration(milliseconds: 500),
+          firstChild: gridWidget(_paddingTop, _paddingBottom, notes, context,
+              _transitionColor, db),
+          secondChild: listWidget(_paddingTop, _paddingBottom, notes, context,
+              _transitionColor, db));
     });
+  }
+
+  Padding listWidget(
+      double _paddingTop,
+      double _paddingBottom,
+      RxList<Note> notes,
+      BuildContext context,
+      Color _transitionColor,
+      DatabaseHelper db) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ListView(
+        padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
+        children: notes
+            .map((note) => noteCard(context, _transitionColor, note, db))
+            .toList(),
+      ),
+    );
+  }
+
+  Padding gridWidget(
+      double _paddingTop,
+      double _paddingBottom,
+      RxList<Note> notes,
+      BuildContext context,
+      Color _transitionColor,
+      DatabaseHelper db) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: StaggeredGridView.count(
+        crossAxisCount: 4,
+        padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
+        children: notes
+            .map((note) => noteCard(context, _transitionColor, note, db))
+            .toList(),
+        staggeredTiles: notes
+            .map<StaggeredTile>((_) => const StaggeredTile.fit(2))
+            .toList(),
+        mainAxisSpacing: 3.0,
+        crossAxisSpacing: 4.0,
+      ),
+    );
   }
 
   Card noteCard(BuildContext context, Color _transitionColor, Note note,
@@ -65,7 +91,10 @@ class NotesGridView extends StatelessWidget {
         openColor: _transitionColor,
         closedColor: getColorFromNote(note, context),
         closedElevation: 0,
-        openBuilder: (_, __) => NoteDetailScreen(note, lsc.refreshListOfNotes),
+        openBuilder: (_, __) {
+          dsc.resetData();
+          return NoteDetailScreen(note, lsc.refreshListOfNotes);
+        },
         closedBuilder: (_, func) => InkWell(
           customBorder:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
