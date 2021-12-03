@@ -15,6 +15,11 @@ class LandingScreenController extends GetxController {
   RxList<Map<String, dynamic>> mapOfNotes = RxList();
   RxList<Note> listOfNotes = RxList();
   Rx<Icon> gridModeIcon = const Icon(Icons.grid_view).obs;
+  var currentSelectedDrawerElement = DrawerElements.notes.obs;
+
+  void updateSelectedDrawerElement(DrawerElements element) {
+    currentSelectedDrawerElement.value = element;
+  }
 
   var isGridModeOn = false.obs;
 
@@ -56,4 +61,13 @@ class LandingScreenController extends GetxController {
             noteColor: getNoteColorFromString(mapNote[columnNoteColor])))
         .toList();
   }
+}
+
+enum DrawerElements {
+  notes,
+  reminders,
+  archive,
+  trash,
+  settings,
+  helpAndFeedback
 }

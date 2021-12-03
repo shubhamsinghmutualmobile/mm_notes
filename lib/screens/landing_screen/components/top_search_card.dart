@@ -31,6 +31,9 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
                   children: [
                     Row(
                       children: [
+                        const SizedBox(
+                          width: 4,
+                        ),
                         IconButton(
                           onPressed: () {
                             Scaffold.of(context).openDrawer();

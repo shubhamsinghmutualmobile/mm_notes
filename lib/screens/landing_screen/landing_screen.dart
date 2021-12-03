@@ -8,6 +8,7 @@ import 'package:mm_notes/screens/landing_screen/components/staggered_grid_view.d
 import 'package:mm_notes/screens/note_detail_screen/note_detail_screen.dart';
 
 import 'components/floating_bottom_bar.dart';
+import 'components/side_drawer.dart';
 import 'components/top_search_card.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -54,37 +55,7 @@ class _LandingScreenState extends State<LandingScreen> {
       body: NotesGridView(),
       extendBody: true,
       extendBodyBehindAppBar: true,
-      drawer: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: _topPadding,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 12, left: 16),
-              child: Row(
-                children: const [
-                  Text(
-                    "Google",
-                    style: TextStyle(
-                        fontFamily: 'ProductSans',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    " Keep",
-                    style: TextStyle(
-                      fontFamily: 'ProductSans',
-                      fontSize: 24,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      drawer: sideDrawer(_topPadding, context),
     );
   }
 }

@@ -7,13 +7,15 @@ import 'package:mm_notes/utils/color_utils.dart';
 void showBottomColorSheet(BuildContext context, Function onColorTap) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
   var currentNoteColor = dsc.currentNoteColor;
+  final _bottomPadding = MediaQuery.of(context).padding.bottom;
+
   showModalBottomSheet(
-      constraints: const BoxConstraints.tightForFinite(height: 100),
+      constraints: BoxConstraints.tightForFinite(height: 100 + _bottomPadding),
       backgroundColor: currentNoteColor?.value,
       context: context,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.only(top: 8, left: 8),
+          padding: EdgeInsets.only(top: 8, left: 8, bottom: _bottomPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
