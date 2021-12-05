@@ -21,14 +21,12 @@ Drawer sideDrawer(double _topPadding, BuildContext context) {
                 Text(
                   "Google",
                   style: TextStyle(
-                      fontFamily: 'ProductSans',
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
                   " Keep",
                   style: TextStyle(
-                    fontFamily: 'ProductSans',
                     fontSize: 24,
                   ),
                 ),

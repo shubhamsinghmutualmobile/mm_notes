@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mm_notes/controllers/landing_screen_controller.dart';
+import 'package:mm_notes/screens/settings_screen/settings_screen.dart';
 
 InkWell selectableDrawerItem(IconData icon, String text, BuildContext context,
     bool isSelected, DrawerElements elementEnum) {
@@ -10,7 +11,8 @@ InkWell selectableDrawerItem(IconData icon, String text, BuildContext context,
     splashColor: Theme.of(context).primaryColor,
     onTap: () {
       lsc.updateSelectedDrawerElement(elementEnum);
-      Navigator.pop(context);
+      Get.back();
+      Get.to(SettingsScreen(() { lsc.currentSelectedDrawerElement(DrawerElements.notes); }));
     },
     child: Card(
       margin: const EdgeInsets.only(top: 4, right: 4, bottom: 4),
