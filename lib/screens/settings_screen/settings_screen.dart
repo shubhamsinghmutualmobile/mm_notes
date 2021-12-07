@@ -27,18 +27,20 @@ class SettingsScreen extends StatelessWidget {
           elevation: 0,
           title: const Text("Settings"),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            settingTitle(context, "Display Options"),
-            settingRow("Theme", "System default", block: () {
-              themeDialog(context, ssc);
-            }),
-            settingTitle(context, "Reminder defaults"),
-            settingRow("Morning", "8:00 AM"),
-            settingRow("Afternoon", "1:00 PM"),
-            settingRow("Evening", "6:00 PM"),
-          ],
+        body: Obx(
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              settingTitle(context, "Display Options"),
+              settingRow("Theme", ssc.currentDeviceThemeText.value, block: () {
+                themeDialog(context, ssc);
+              }),
+              settingTitle(context, "Reminder defaults"),
+              settingRow("Morning", "8:00 AM"),
+              settingRow("Afternoon", "1:00 PM"),
+              settingRow("Evening", "6:00 PM"),
+            ],
+          ),
         ),
       ),
     );
