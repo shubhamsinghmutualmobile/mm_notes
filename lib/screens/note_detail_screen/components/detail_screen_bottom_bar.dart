@@ -14,29 +14,32 @@ Widget detailScreenBottomBar(Function onColorTap) {
       DateFormat('dd-MM-yyyy (kk:mm:ss)').format(dsc.currentDate);
   return Padding(
     padding: EdgeInsets.only(bottom: _bottomPadding),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.add_box_outlined),
-                splashRadius: iconSplashRadius),
-            IconButton(
-                onPressed: () {
-                  showBottomColorSheet(onColorTap);
-                },
-                icon: const Icon(Icons.color_lens_outlined),
-                splashRadius: iconSplashRadius),
-          ],
-        ),
-        Text("Edited at $formattedDate"),
-        IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert),
-            splashRadius: iconSplashRadius),
-      ],
+    child: Material(
+      type: MaterialType.transparency,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.add_box_outlined),
+                  splashRadius: iconSplashRadius),
+              IconButton(
+                  onPressed: () {
+                    showBottomColorSheet(onColorTap);
+                  },
+                  icon: const Icon(Icons.color_lens_outlined),
+                  splashRadius: iconSplashRadius),
+            ],
+          ),
+          Text("Edited at $formattedDate"),
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.more_vert),
+              splashRadius: iconSplashRadius),
+        ],
+      ),
     ),
   );
 }

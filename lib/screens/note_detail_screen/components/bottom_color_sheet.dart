@@ -30,6 +30,7 @@ void showBottomColorSheet(Function onColorTap) {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: noteColorList
                     .map((noteColor) => InkWell(
+                          customBorder: const CircleBorder(),
                           onTap: () {
                             onColorTap(noteColor);
                           },

@@ -17,7 +17,7 @@ InkWell selectableDrawerItem(
       }));
     },
     child: Card(
-      margin: const EdgeInsets.only(top: 4, right: 4, bottom: 4),
+      margin: const EdgeInsets.only(top: 2, right: 4),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(32), bottomRight: Radius.circular(32))),
@@ -36,13 +36,13 @@ InkWell selectableDrawerItem(
                     ? Get.theme.primaryColorDark
                     : Get.theme.textTheme.bodyText1!.color),
             const SizedBox(
-              width: 18,
+              width: 16,
             ),
             Text(
               text,
               style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
                   color: isSelected
                       ? Get.theme.primaryColorDark
                       : Get.theme.textTheme.bodyText1!.color),
