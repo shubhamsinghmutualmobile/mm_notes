@@ -27,15 +27,36 @@ class NotesGridView extends StatelessWidget {
     final _transitionColor = Get.theme.cardColor;
 
     return Obx(() {
-      return AnimatedCrossFade(
-          crossFadeState: !lsc.isGridModeOn.value
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
-          duration: const Duration(milliseconds: 500),
-          firstChild: gridWidget(
-              _paddingTop, _paddingBottom, notes, _transitionColor, db),
-          secondChild: listWidget(
-              _paddingTop, _paddingBottom, notes, _transitionColor, db));
+      if (notes.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.lightbulb_outlined,
+                size: 125,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
+                "Notes you add appear here",
+                style: Get.textTheme.subtitle2,
+              ),
+            ],
+          ),
+        );
+      } else {
+        return AnimatedCrossFade(
+            crossFadeState: !lsc.isGridModeOn.value
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: const Duration(milliseconds: 500),
+            firstChild: gridWidget(
+                _paddingTop, _paddingBottom, notes, _transitionColor, db),
+            secondChild: listWidget(
+                _paddingTop, _paddingBottom, notes, _transitionColor, db));
+      }
     });
   }
 
