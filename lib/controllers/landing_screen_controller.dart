@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/utils/color_utils.dart';
+import 'package:mm_notes/utils/mappers.dart';
 
 class LandingScreenController extends GetxController {
   static const String columnId = DatabaseHelper.columnId;
@@ -10,6 +11,7 @@ class LandingScreenController extends GetxController {
   static const String columnBody = DatabaseHelper.columnBody;
   static const String columnDateCreated = DatabaseHelper.columnDateCreated;
   static const String columnNoteColor = DatabaseHelper.columnNoteColor;
+  static const String columnIsPinned = DatabaseHelper.columnIsPinned;
 
   final DatabaseHelper db = DatabaseHelper.instance;
   RxList<Map<String, dynamic>> mapOfNotes = RxList();
@@ -58,7 +60,8 @@ class LandingScreenController extends GetxController {
             title: mapNote[columnTitle],
             body: mapNote[columnBody],
             dateCreated: (mapNote[columnDateCreated] as int).toDouble(),
-            noteColor: getNoteColorFromString(mapNote[columnNoteColor])))
+            noteColor: getNoteColorFromString(mapNote[columnNoteColor]),
+            isPinned: (mapNote[columnIsPinned] as int).toBoolean()))
         .toList();
   }
 }

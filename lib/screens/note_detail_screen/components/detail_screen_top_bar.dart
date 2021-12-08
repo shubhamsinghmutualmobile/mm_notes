@@ -5,7 +5,7 @@ import 'package:mm_notes/controllers/detail_screen_controller.dart';
 const iconSplashRadius = 20.0;
 const padding = 8.0;
 
-Column detailScreenTopBar(BuildContext context, Function _insertOrUpdateNote) {
+Widget detailScreenTopBar(BuildContext context, Function _insertOrUpdateNote) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
 
   final _topPadding = MediaQuery.of(context).padding.top;
@@ -32,10 +32,16 @@ Column detailScreenTopBar(BuildContext context, Function _insertOrUpdateNote) {
           ),
           Row(
             children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.push_pin_outlined),
-                  splashRadius: iconSplashRadius),
+              Obx(() =>
+                IconButton(
+                    onPressed: () {
+                      dsc.isCurrentNotePinned.toggle();
+                      dsc.updatePinnedIcon();
+                      print(dsc.isCurrentNotePinned.value);
+                    },
+                    icon: dsc.pinnedIcon.value,
+                    splashRadius: iconSplashRadius),
+              ),
               IconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.add_alert_outlined),

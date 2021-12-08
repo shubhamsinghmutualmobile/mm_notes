@@ -48,6 +48,7 @@ class NotesGridView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(
+        shrinkWrap: true,
         padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
         children: notes
             .map((note) => noteCard(context, _transitionColor, note, db))
@@ -66,6 +67,7 @@ class NotesGridView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: StaggeredGridView.count(
+        shrinkWrap: true,
         crossAxisCount: 4,
         padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
         children: notes

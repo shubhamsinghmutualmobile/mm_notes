@@ -20,6 +20,7 @@ class NoteDetailScreen extends StatelessWidget {
   static const String columnBody = DatabaseHelper.columnBody;
   static const String columnDateCreated = DatabaseHelper.columnDateCreated;
   static const String columnNoteColor = DatabaseHelper.columnNoteColor;
+  static const String columnIsPinned = DatabaseHelper.columnIsPinned;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +69,8 @@ class NoteDetailScreen extends StatelessWidget {
       }
       dsc.currentDate =
           DateTime.fromMicrosecondsSinceEpoch(note!.dateCreated.toInt());
+      dsc.isCurrentNotePinned.value = note!.isPinned;
+      dsc.updatePinnedIcon();
     }
   }
 
@@ -77,6 +80,7 @@ class NoteDetailScreen extends StatelessWidget {
     var _titleController = dsc.titleController.value;
     var _bodyController = dsc.bodyController.value;
     var _currentNoteColorEnum = dsc.currentNoteColorEnum;
+    var _currentNoteIsPinned = dsc.isCurrentNotePinned.value;
 
     int noteTime;
     if (note != null) {
@@ -91,7 +95,8 @@ class NoteDetailScreen extends StatelessWidget {
         columnTitle: _titleController.text,
         columnBody: _bodyController.text,
         columnDateCreated: noteTime,
-        columnNoteColor: _currentNoteColorEnum.toString()
+        columnNoteColor: _currentNoteColorEnum.toString(),
+        columnIsPinned: _currentNoteIsPinned
       });
 
       if (result != null) {
@@ -107,7 +112,8 @@ class NoteDetailScreen extends StatelessWidget {
           columnTitle: _titleController.text,
           columnBody: _bodyController.text,
           columnDateCreated: DateTime.now().microsecondsSinceEpoch,
-          columnNoteColor: _currentNoteColorEnum.toString()
+          columnNoteColor: _currentNoteColorEnum.toString(),
+          columnIsPinned: _currentNoteIsPinned
         });
         if (result != null) {
           if (result != 0) {

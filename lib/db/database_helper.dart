@@ -13,6 +13,7 @@ class DatabaseHelper {
   static const columnBody = "body";
   static const columnDateCreated = "dateCreated";
   static const columnNoteColor = "noteColor";
+  static const columnIsPinned = "isPinned";
 
   // Making it a singleton class
   DatabaseHelper._privateConstructor();
@@ -44,7 +45,8 @@ class DatabaseHelper {
       $columnTitle TEXT NOT NULL, 
       $columnBody TEXT NOT NULL, 
       $columnDateCreated INTEGER NOT NULL,
-      $columnNoteColor TEXT NOT NULL
+      $columnNoteColor TEXT NOT NULL,
+      $columnIsPinned BOOLEAN NOT NULL
       );
       ''');
   }
