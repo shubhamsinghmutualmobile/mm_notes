@@ -116,22 +116,8 @@ class NotesGridView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(note.title,
-                          style: Theme.of(context).textTheme.headline6),
-                      getPinnedIcon(note.isPinned)
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(note.body,
-                      style: Theme.of(context).textTheme.bodyText2),
-                ),
+                getCardTitle(note.title, note.isPinned),
+                getCardBody(note),
               ],
             ),
           ),
