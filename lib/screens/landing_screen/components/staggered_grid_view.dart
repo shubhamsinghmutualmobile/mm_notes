@@ -8,6 +8,7 @@ import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/screens/note_detail_screen/note_detail_screen.dart';
 import 'package:mm_notes/utils/color_utils.dart';
+import 'package:mm_notes/utils/note_utils.dart';
 
 class NotesGridView extends StatelessWidget {
   NotesGridView({Key? key}) : super(key: key);
@@ -84,12 +85,16 @@ class NotesGridView extends StatelessWidget {
 
   Card noteCard(BuildContext context, Color _transitionColor, Note note,
       DatabaseHelper db) {
+    final cardShape = BorderRadius.circular(8.0);
+
     return Card(
-      borderOnForeground: true,
       shape: RoundedRectangleBorder(
           side: BorderSide(color: Theme.of(context).hintColor.withAlpha(100)),
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: cardShape),
       child: OpenContainer(
+        closedShape: RoundedRectangleBorder(
+            side: BorderSide(color: Theme.of(context).hintColor.withAlpha(100)),
+            borderRadius: cardShape),
         openColor: _transitionColor,
         closedColor: getColorFromNote(note, context),
         closedElevation: 0,
@@ -98,8 +103,7 @@ class NotesGridView extends StatelessWidget {
           return NoteDetailScreen(note, lsc.refreshListOfNotes);
         },
         closedBuilder: (_, func) => InkWell(
-          customBorder:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          customBorder: RoundedRectangleBorder(borderRadius: cardShape),
           onTap: () {
             func();
           },
@@ -114,8 +118,14 @@ class NotesGridView extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: Text(note.title,
-                      style: Theme.of(context).textTheme.headline6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(note.title,
+                          style: Theme.of(context).textTheme.headline6),
+                      getPinnedIcon(note.isPinned)
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(4.0),
