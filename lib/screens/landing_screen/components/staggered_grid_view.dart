@@ -24,7 +24,7 @@ class NotesGridView extends StatelessWidget {
 
     final _paddingTop = MediaQuery.of(context).padding.top * 1.1;
     final _paddingBottom = MediaQuery.of(context).padding.bottom * 1.6;
-    final _transitionColor = Theme.of(context).cardColor;
+    final _transitionColor = Get.theme.cardColor;
 
     return Obx(() {
       return AnimatedCrossFade(
@@ -32,48 +32,36 @@ class NotesGridView extends StatelessWidget {
               ? CrossFadeState.showFirst
               : CrossFadeState.showSecond,
           duration: const Duration(milliseconds: 500),
-          firstChild: gridWidget(_paddingTop, _paddingBottom, notes, context,
-              _transitionColor, db),
-          secondChild: listWidget(_paddingTop, _paddingBottom, notes, context,
-              _transitionColor, db));
+          firstChild: gridWidget(
+              _paddingTop, _paddingBottom, notes, _transitionColor, db),
+          secondChild: listWidget(
+              _paddingTop, _paddingBottom, notes, _transitionColor, db));
     });
   }
 
-  Padding listWidget(
-      double _paddingTop,
-      double _paddingBottom,
-      RxList<Note> notes,
-      BuildContext context,
-      Color _transitionColor,
-      DatabaseHelper db) {
+  Padding listWidget(double _paddingTop, double _paddingBottom,
+      RxList<Note> notes, Color _transitionColor, DatabaseHelper db) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(
         shrinkWrap: true,
         padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
-        children: notes
-            .map((note) => noteCard(context, _transitionColor, note, db))
-            .toList(),
+        children:
+            notes.map((note) => noteCard(_transitionColor, note, db)).toList(),
       ),
     );
   }
 
-  Padding gridWidget(
-      double _paddingTop,
-      double _paddingBottom,
-      RxList<Note> notes,
-      BuildContext context,
-      Color _transitionColor,
-      DatabaseHelper db) {
+  Padding gridWidget(double _paddingTop, double _paddingBottom,
+      RxList<Note> notes, Color _transitionColor, DatabaseHelper db) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: StaggeredGridView.count(
         shrinkWrap: true,
         crossAxisCount: 4,
         padding: EdgeInsets.only(top: _paddingTop, bottom: _paddingBottom),
-        children: notes
-            .map((note) => noteCard(context, _transitionColor, note, db))
-            .toList(),
+        children:
+            notes.map((note) => noteCard(_transitionColor, note, db)).toList(),
         staggeredTiles: notes
             .map<StaggeredTile>((_) => const StaggeredTile.fit(2))
             .toList(),
@@ -83,20 +71,19 @@ class NotesGridView extends StatelessWidget {
     );
   }
 
-  Card noteCard(BuildContext context, Color _transitionColor, Note note,
-      DatabaseHelper db) {
+  Card noteCard(Color _transitionColor, Note note, DatabaseHelper db) {
     final cardShape = BorderRadius.circular(8.0);
 
     return Card(
       shape: RoundedRectangleBorder(
-          side: BorderSide(color: Theme.of(context).hintColor.withAlpha(100)),
+          side: BorderSide(color: Get.theme.hintColor.withAlpha(100)),
           borderRadius: cardShape),
       child: OpenContainer(
         closedShape: RoundedRectangleBorder(
-            side: BorderSide(color: Theme.of(context).hintColor.withAlpha(100)),
+            side: BorderSide(color: Get.theme.hintColor.withAlpha(100)),
             borderRadius: cardShape),
         openColor: _transitionColor,
-        closedColor: getColorFromNote(note, context),
+        closedColor: getColorFromNote(note),
         closedElevation: 0,
         openBuilder: (_, __) {
           dsc.resetData();

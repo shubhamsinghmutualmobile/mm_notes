@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class FloatingBottomBar extends StatelessWidget {
   const FloatingBottomBar({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class FloatingBottomBar extends StatelessWidget {
     const _notchMargin = 8.0;
 
     return BottomAppBar(
-      color: Theme.of(context).backgroundColor,
+      color: Get.theme.backgroundColor,
       child: Row(
         children: [
           IconButton(

@@ -4,16 +4,16 @@ import 'package:mm_notes/controllers/detail_screen_controller.dart';
 import 'package:mm_notes/screens/note_detail_screen/components/tappable_color_card.dart';
 import 'package:mm_notes/utils/color_utils.dart';
 
-void showBottomColorSheet(BuildContext context, Function onColorTap) {
+void showBottomColorSheet(Function onColorTap) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
   var currentNoteColor = dsc.currentNoteColor;
-  final _bottomPadding = MediaQuery.of(context).padding.bottom;
+  final _bottomPadding = Get.mediaQuery.padding.bottom;
 
   showModalBottomSheet(
       constraints: BoxConstraints.tightForFinite(height: 100 + _bottomPadding),
       backgroundColor: currentNoteColor?.value,
-      context: context,
-      builder: (context) {
+      context: Get.context!,
+      builder: (_) {
         return Container(
           padding: EdgeInsets.only(top: 8, left: 8, bottom: _bottomPadding),
           child: Column(
@@ -23,7 +23,7 @@ void showBottomColorSheet(BuildContext context, Function onColorTap) {
                 padding: const EdgeInsets.only(top: 8, left: 8, bottom: 8),
                 child: Text(
                   "Color",
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Get.textTheme.subtitle1,
                 ),
               ),
               Row(
@@ -33,7 +33,7 @@ void showBottomColorSheet(BuildContext context, Function onColorTap) {
                           onTap: () {
                             onColorTap(noteColor);
                           },
-                          child: tappableColorCard(context, noteColor),
+                          child: tappableColorCard(noteColor),
                         ))
                     .toList(),
               ),

@@ -31,11 +31,11 @@ class SettingsScreen extends StatelessWidget {
           () => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              settingTitle(context, "Display Options"),
+              settingTitle("Display Options"),
               settingRow("Theme", ssc.currentDeviceThemeText.value, block: () {
-                themeDialog(context, ssc);
+                themeDialog();
               }),
-              settingTitle(context, "Reminder defaults"),
+              settingTitle("Reminder defaults"),
               settingRow("Morning", "8:00 AM"),
               settingRow("Afternoon", "1:00 PM"),
               settingRow("Evening", "6:00 PM"),

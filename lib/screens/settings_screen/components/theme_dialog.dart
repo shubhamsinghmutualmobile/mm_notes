@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mm_notes/controllers/settings_screen_controller.dart';
 
-void themeDialog(BuildContext context, SettingsScreenController ssc) {
+void themeDialog() {
+  SettingsScreenController ssc = Get.put(SettingsScreenController());
+
   Get.defaultDialog(
       cancel: Padding(
         padding: const EdgeInsets.only(right: 32, bottom: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            TextButton(onPressed: (){ Get.back(); }, child: Text("Cancel", style: Theme.of(context).textTheme.subtitle2!.copyWith(color: Theme.of(context).primaryColorDark)),)
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text("Cancel",
+                  style: Get.textTheme.subtitle2!
+                      .copyWith(color: Get.theme.primaryColorDark)),
+            )
           ],
         ),
       ),
@@ -19,7 +28,7 @@ void themeDialog(BuildContext context, SettingsScreenController ssc) {
       titlePadding: EdgeInsets.zero,
       titleStyle: const TextStyle(fontSize: 0),
       content: Obx(
-            () => Column(
+        () => Column(
           children: [
             Row(
               children: [
@@ -27,43 +36,55 @@ void themeDialog(BuildContext context, SettingsScreenController ssc) {
                   padding: const EdgeInsets.only(top: 18, left: 24),
                   child: Text(
                     "Choose theme",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5!
-                        .copyWith(
-                        color: Theme.of(context).hintColor),
+                    style: Get.textTheme.headline5!
+                        .copyWith(color: Get.theme.hintColor),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8,),
-            themeOption(ssc, "Light", DeviceTheme.light, context),
-            themeOption(ssc, "Dark", DeviceTheme.dark, context),
-            themeOption(ssc, "System default", DeviceTheme.system, context),
+            const SizedBox(
+              height: 8,
+            ),
+            themeOption(ssc, "Light", DeviceTheme.light),
+            themeOption(ssc, "Dark", DeviceTheme.dark),
+            themeOption(ssc, "System default", DeviceTheme.system),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Text("To change the theme of your Keep widget and notifications, manage your Android screen and display settings.", style: TextStyle(color: Theme.of(context).hintColor),),
+              child: Text(
+                "To change the theme of your Keep widget and notifications, manage your Android screen and display settings.",
+                style: TextStyle(color: Get.theme.hintColor),
+              ),
             )
           ],
         ),
       ));
 }
 
-InkWell themeOption(SettingsScreenController ssc, String radioText, DeviceTheme theme, BuildContext context) {
+InkWell themeOption(
+    SettingsScreenController ssc, String radioText, DeviceTheme theme) {
   return InkWell(
     onTap: () {
       ssc.updateDeviceTheme(theme);
     },
     child: Row(
       children: [
-        const SizedBox(width: 12,),
+        const SizedBox(
+          width: 12,
+        ),
         Radio(
-            activeColor: Theme.of(context).primaryColorDark,
+            activeColor: Get.theme.primaryColorDark,
             value: theme,
             groupValue: ssc.currentDeviceTheme.value,
-            onChanged: (DeviceTheme? value) { ssc.updateDeviceTheme(theme); }),
-        const SizedBox(width: 16,),
-        Text(radioText, style: TextStyle(color: Theme.of(context).hintColor),)
+            onChanged: (DeviceTheme? value) {
+              ssc.updateDeviceTheme(theme);
+            }),
+        const SizedBox(
+          width: 16,
+        ),
+        Text(
+          radioText,
+          style: TextStyle(color: Get.theme.hintColor),
+        )
       ],
     ),
   );

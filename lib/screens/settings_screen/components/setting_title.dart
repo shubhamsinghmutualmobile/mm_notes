@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-Padding settingTitle(BuildContext context, String title) {
+Padding settingTitle(String title) {
   return Padding(
     padding: const EdgeInsets.all(16.0),
-    child: Text(title, style: Theme.of(context).textTheme.subtitle2!.copyWith(color: Colors.blueAccent, fontWeight: FontWeight.w300),),
+    child: Text(title, style: Get.textTheme.subtitle2!.copyWith(color: Colors.blueAccent, fontWeight: FontWeight.w300),),
   );
 }

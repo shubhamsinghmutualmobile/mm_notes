@@ -7,9 +7,9 @@ import 'bottom_color_sheet.dart';
 
 const iconSplashRadius = 20.0;
 
-Widget detailScreenBottomBar(BuildContext context, Function onColorTap) {
+Widget detailScreenBottomBar(Function onColorTap) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
-  final _bottomPadding = MediaQuery.of(context).padding.bottom;
+  final _bottomPadding = Get.mediaQuery.padding.bottom;
   var formattedDate =
       DateFormat('dd-MM-yyyy (kk:mm:ss)').format(dsc.currentDate);
   return Padding(
@@ -25,7 +25,7 @@ Widget detailScreenBottomBar(BuildContext context, Function onColorTap) {
                 splashRadius: iconSplashRadius),
             IconButton(
                 onPressed: () {
-                  showBottomColorSheet(context, onColorTap);
+                  showBottomColorSheet(onColorTap);
                 },
                 icon: const Icon(Icons.color_lens_outlined),
                 splashRadius: iconSplashRadius),

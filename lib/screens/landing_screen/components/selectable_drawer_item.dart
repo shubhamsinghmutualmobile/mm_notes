@@ -3,16 +3,18 @@ import 'package:get/get.dart';
 import 'package:mm_notes/controllers/landing_screen_controller.dart';
 import 'package:mm_notes/screens/settings_screen/settings_screen.dart';
 
-InkWell selectableDrawerItem(IconData icon, String text, BuildContext context,
-    bool isSelected, DrawerElements elementEnum) {
+InkWell selectableDrawerItem(
+    IconData icon, String text, bool isSelected, DrawerElements elementEnum) {
   final LandingScreenController lsc = Get.put(LandingScreenController());
 
   return InkWell(
-    splashColor: Theme.of(context).primaryColor,
+    splashColor: Get.theme.primaryColor,
     onTap: () {
       lsc.updateSelectedDrawerElement(elementEnum);
       Get.back();
-      Get.to(SettingsScreen(() { lsc.currentSelectedDrawerElement(DrawerElements.notes); }));
+      Get.to(SettingsScreen(() {
+        lsc.currentSelectedDrawerElement(DrawerElements.notes);
+      }));
     },
     child: Card(
       margin: const EdgeInsets.only(top: 4, right: 4, bottom: 4),
@@ -20,8 +22,7 @@ InkWell selectableDrawerItem(IconData icon, String text, BuildContext context,
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(32), bottomRight: Radius.circular(32))),
       elevation: 0,
-      color:
-          isSelected ? Theme.of(context).backgroundColor : Colors.transparent,
+      color: isSelected ? Get.theme.backgroundColor : Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
@@ -32,8 +33,8 @@ InkWell selectableDrawerItem(IconData icon, String text, BuildContext context,
             ),
             Icon(icon,
                 color: isSelected
-                    ? Theme.of(context).primaryColorDark
-                    : Theme.of(context).textTheme.bodyText1!.color),
+                    ? Get.theme.primaryColorDark
+                    : Get.theme.textTheme.bodyText1!.color),
             const SizedBox(
               width: 18,
             ),
@@ -43,8 +44,8 @@ InkWell selectableDrawerItem(IconData icon, String text, BuildContext context,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                   color: isSelected
-                      ? Theme.of(context).primaryColorDark
-                      : Theme.of(context).textTheme.bodyText1!.color),
+                      ? Get.theme.primaryColorDark
+                      : Get.theme.textTheme.bodyText1!.color),
             ),
           ],
         ),

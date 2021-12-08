@@ -27,7 +27,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     final DetailScreenController dsc = Get.put(DetailScreenController());
 
-    final _transitionColor = Theme.of(context).cardColor;
+    final _transitionColor = Get.theme.cardColor;
 
     final _topPadding = MediaQuery.of(context).padding.top;
 
@@ -45,8 +45,8 @@ class _LandingScreenState extends State<LandingScreen> {
             lsc.refreshListOfNotes();
             openWidget();
           },
-          child: Icon(Icons.add, color: Theme.of(context).hintColor),
-          backgroundColor: Theme.of(context).backgroundColor,
+          child: Icon(Icons.add, color: Get.theme.hintColor),
+          backgroundColor: Get.theme.backgroundColor,
           elevation: 4,
         ),
       ),
@@ -55,7 +55,7 @@ class _LandingScreenState extends State<LandingScreen> {
       body: NotesGridView(),
       extendBody: true,
       extendBodyBehindAppBar: true,
-      drawer: sideDrawer(_topPadding, context),
+      drawer: sideDrawer(_topPadding),
     );
   }
 }

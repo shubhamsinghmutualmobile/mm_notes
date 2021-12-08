@@ -11,7 +11,7 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     const _padding = 8.0;
     const _splashRadius = _padding * 2.5;
-    final _topPadding = MediaQuery.of(context).padding.top;
+    final _topPadding = Get.mediaQuery.padding.top;
 
     return Container(
       margin: EdgeInsets.only(top: _topPadding),
@@ -42,7 +42,7 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
                           splashRadius: _splashRadius,
                         ),
                         Text("Search your notes",
-                            style: Theme.of(context).textTheme.subtitle1),
+                            style: Get.textTheme.subtitle1),
                       ],
                     ),
                     // Circular profile button
@@ -71,7 +71,7 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
                               ),
                               onTap: () {},
                             ),
-                            color: Theme.of(context).backgroundColor,
+                            color: Get.theme.backgroundColor,
                           ),
                         ),
                       ],

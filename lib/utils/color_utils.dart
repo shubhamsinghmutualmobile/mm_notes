@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mm_notes/models/note.dart';
 
-Color getColorFromNote(Note? note, BuildContext context) {
+Color getColorFromNote(Note? note) {
   if (note != null) {
     if (note.noteColor == NoteColor.violet) {
       return Colors.deepPurple;
@@ -18,10 +19,10 @@ Color getColorFromNote(Note? note, BuildContext context) {
     } else if (note.noteColor == NoteColor.red) {
       return Colors.red;
     } else {
-      return Theme.of(context).cardColor;
+      return Get.theme.cardColor;
     }
   } else {
-    return Theme.of(context).cardColor;
+    return Get.theme.cardColor;
   }
 }
 

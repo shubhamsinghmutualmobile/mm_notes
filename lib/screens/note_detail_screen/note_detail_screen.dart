@@ -26,23 +26,23 @@ class NoteDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final DetailScreenController dsc = Get.put(DetailScreenController());
 
-    setupInitialViews(dsc, context);
+    setupInitialViews(dsc);
 
     return WillPopScope(
       onWillPop: () {
-        return _insertOrUpdateNote(context, dsc);
+        return _insertOrUpdateNote();
       },
       child: Scaffold(
         body: Obx(
           () => Container(
             color: dsc.currentNoteColor?.value,
-            child: detailScreenTopBar(context, _insertOrUpdateNote),
+            child: detailScreenTopBar(_insertOrUpdateNote),
           ),
         ),
         bottomNavigationBar: Obx(() => Container(
               color: dsc.currentNoteColor?.value,
-              child: detailScreenBottomBar(context, (Color noteColor) {
-                Navigator.pop(context);
+              child: detailScreenBottomBar((Color noteColor) {
+                Get.back();
                 dsc.currentNoteColor?.value = noteColor;
                 dsc.currentNoteColorEnum = getNoteColorFromColor(noteColor);
               }),
@@ -51,13 +51,13 @@ class NoteDetailScreen extends StatelessWidget {
     );
   }
 
-  void setupInitialViews(DetailScreenController dsc, BuildContext context) {
+  void setupInitialViews(DetailScreenController dsc) {
     var _titleController = dsc.titleController.value;
     var _bodyController = dsc.bodyController.value;
 
     dsc.currentNoteColorEnum ??= note?.noteColor ?? NoteColor.grey;
 
-    dsc.currentNoteColor ??= getColorFromNote(note, context).obs;
+    dsc.currentNoteColor ??= getColorFromNote(note).obs;
 
     if (note != null) {
       if (_titleController.text != note!.title &&
@@ -74,8 +74,8 @@ class NoteDetailScreen extends StatelessWidget {
     }
   }
 
-  Future<bool> _insertOrUpdateNote(
-      BuildContext context, DetailScreenController dsc) async {
+  Future<bool> _insertOrUpdateNote() async {
+    final dsc = Get.put(DetailScreenController());
     var _db = dsc.db;
     var _titleController = dsc.titleController.value;
     var _bodyController = dsc.bodyController.value;
@@ -124,7 +124,7 @@ class NoteDetailScreen extends StatelessWidget {
         }
       }
     }
-    Navigator.pop(context);
+    Get.back();
     return true;
   }
 }

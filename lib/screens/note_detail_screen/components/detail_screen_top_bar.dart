@@ -5,10 +5,10 @@ import 'package:mm_notes/controllers/detail_screen_controller.dart';
 const iconSplashRadius = 20.0;
 const padding = 8.0;
 
-Widget detailScreenTopBar(BuildContext context, Function _insertOrUpdateNote) {
+Widget detailScreenTopBar(Function _insertOrUpdateNote) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
 
-  final _topPadding = MediaQuery.of(context).padding.top;
+  final _topPadding = Get.mediaQuery.padding.top;
 
   final _titleController = dsc.titleController.value;
   final _bodyController = dsc.bodyController.value;
@@ -23,7 +23,7 @@ Widget detailScreenTopBar(BuildContext context, Function _insertOrUpdateNote) {
             children: [
               IconButton(
                 onPressed: () {
-                  _insertOrUpdateNote(context, dsc);
+                  _insertOrUpdateNote();
                 },
                 icon: const Icon(Icons.arrow_back),
                 splashRadius: iconSplashRadius,
@@ -32,8 +32,8 @@ Widget detailScreenTopBar(BuildContext context, Function _insertOrUpdateNote) {
           ),
           Row(
             children: [
-              Obx(() =>
-                IconButton(
+              Obx(
+                () => IconButton(
                     onPressed: () {
                       dsc.isCurrentNotePinned.toggle();
                       dsc.updatePinnedIcon();
@@ -65,7 +65,7 @@ Widget detailScreenTopBar(BuildContext context, Function _insertOrUpdateNote) {
                 controller: _titleController,
                 decoration: const InputDecoration(
                     hintText: "Title", border: InputBorder.none),
-                style: Theme.of(context).textTheme.headline5,
+                style: Get.textTheme.headline5,
               ),
               Expanded(
                 child: TextField(
@@ -73,7 +73,7 @@ Widget detailScreenTopBar(BuildContext context, Function _insertOrUpdateNote) {
                   controller: _bodyController,
                   decoration: const InputDecoration(
                       hintText: "Note", border: InputBorder.none),
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Get.textTheme.subtitle1,
                 ),
               ),
             ],
