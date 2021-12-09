@@ -12,9 +12,11 @@ InkWell selectableDrawerItem(
     onTap: () {
       lsc.updateSelectedDrawerElement(elementEnum);
       Get.back();
-      Get.to(SettingsScreen(() {
-        lsc.currentSelectedDrawerElement(DrawerElements.notes);
-      }));
+      if (elementEnum == DrawerElements.settings) {
+        Get.to(SettingsScreen(() {
+          lsc.currentSelectedDrawerElement(DrawerElements.notes);
+        }));
+      }
     },
     child: Card(
       margin: const EdgeInsets.only(top: 2, right: 4),
@@ -33,7 +35,7 @@ InkWell selectableDrawerItem(
             ),
             Icon(icon,
                 color: isSelected
-                    ? Get.theme.primaryColorDark
+                    ? Get.theme.primaryColor
                     : Get.theme.textTheme.bodyText1!.color),
             const SizedBox(
               width: 16,
@@ -44,7 +46,7 @@ InkWell selectableDrawerItem(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                   color: isSelected
-                      ? Get.theme.primaryColorDark
+                      ? Get.theme.primaryColor
                       : Get.theme.textTheme.bodyText1!.color),
             ),
           ],

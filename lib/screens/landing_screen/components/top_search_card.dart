@@ -21,7 +21,7 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
           Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(_padding * 4)),
-              elevation: 0,
+              color: Get.theme.backgroundColor,
               child: InkWell(
                 customBorder: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(_padding * 4)),

@@ -96,6 +96,7 @@ class NotesGridView extends StatelessWidget {
     final cardShape = BorderRadius.circular(8.0);
 
     return Card(
+      elevation: 0,
       shape: RoundedRectangleBorder(
           side: BorderSide(color: Get.theme.hintColor.withAlpha(100)),
           borderRadius: cardShape),

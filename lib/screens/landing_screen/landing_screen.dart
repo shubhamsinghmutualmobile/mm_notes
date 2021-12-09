@@ -46,8 +46,6 @@ class _LandingScreenState extends State<LandingScreen> {
             openWidget();
           },
           child: Icon(Icons.add, color: Get.theme.hintColor),
-          backgroundColor: Get.theme.backgroundColor,
-          elevation: 4,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

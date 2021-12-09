@@ -17,7 +17,7 @@ void themeDialog() {
               },
               child: Text("Cancel",
                   style: Get.textTheme.subtitle2!
-                      .copyWith(color: Get.theme.primaryColorDark)),
+                      .copyWith(color: Get.theme.primaryColor)),
             )
           ],
         ),
@@ -72,7 +72,7 @@ InkWell themeOption(
           width: 12,
         ),
         Radio(
-            activeColor: Get.theme.primaryColorDark,
+            activeColor: Get.theme.primaryColor,
             value: theme,
             groupValue: ssc.currentDeviceTheme.value,
             onChanged: (DeviceTheme? value) {

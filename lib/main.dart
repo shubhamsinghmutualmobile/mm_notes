@@ -20,8 +20,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.lime, fontFamily: 'ProductSans'),
       home: const LandingScreen(),
       debugShowCheckedModeBanner: false,
-      darkTheme:
-          ThemeData(brightness: Brightness.dark, fontFamily: 'ProductSans'),
+      darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          fontFamily: 'ProductSans',
+          primaryColor: Colors.blueAccent,
+          scaffoldBackgroundColor: Colors.white12,
+          backgroundColor: Colors.white12,
+          cardColor: const Color(0xff1e1e1e),
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              elevation: 4, backgroundColor: Colors.blueAccent)),
     );
   }
 }
