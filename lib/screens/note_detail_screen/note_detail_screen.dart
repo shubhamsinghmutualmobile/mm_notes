@@ -45,7 +45,7 @@ class NoteDetailScreen extends StatelessWidget {
                 Get.back();
                 dsc.currentNoteColor?.value = noteColor;
                 dsc.currentNoteColorEnum = getNoteColorFromColor(noteColor);
-              }, note),
+              }, note, context),
             )),
       ),
     );
