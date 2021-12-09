@@ -25,6 +25,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    context.theme;
     final DetailScreenController dsc = Get.put(DetailScreenController());
 
     final _transitionColor = Get.theme.cardColor;

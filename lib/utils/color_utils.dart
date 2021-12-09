@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mm_notes/controllers/settings_screen_controller.dart';
 import 'package:mm_notes/models/note.dart';
 
 Color getColorFromNote(Note? note) {
@@ -75,3 +76,14 @@ const List<Color> noteColorList = [
   Colors.orange,
   Colors.red,
 ];
+
+ThemeMode getCurrentDeviceThemeMode() {
+  final ssc = Get.put(SettingsScreenController());
+  if (ssc.currentDeviceTheme.value == DeviceTheme.light) {
+    return ThemeMode.light;
+  } else if (ssc.currentDeviceTheme.value == DeviceTheme.dark) {
+    return ThemeMode.dark;
+  } else {
+    return ThemeMode.system;
+  }
+}

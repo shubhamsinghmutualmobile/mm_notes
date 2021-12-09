@@ -19,9 +19,10 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
       child: Column(
         children: [
           Card(
+              elevation: 0,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(_padding * 4)),
-              color: Get.theme.backgroundColor,
+              color: Get.theme.secondaryHeaderColor,
               child: InkWell(
                 customBorder: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(_padding * 4)),
@@ -60,7 +61,7 @@ class TopSearchCard extends StatelessWidget with PreferredSizeWidget {
                         Container(
                           margin: const EdgeInsets.only(right: _padding),
                           child: Card(
-                            elevation: 0.1,
+                            elevation: 0,
                             shape: const CircleBorder(),
                             child: InkWell(
                               customBorder: const CircleBorder(),

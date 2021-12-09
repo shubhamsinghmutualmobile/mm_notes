@@ -32,9 +32,10 @@ class NotesGridView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.lightbulb_outlined,
                 size: 125,
+                color: Get.theme.primaryIconTheme.color,
               ),
               const SizedBox(
                 height: 16,

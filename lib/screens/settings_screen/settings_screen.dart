@@ -14,6 +14,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.theme;
     final SettingsScreenController ssc = Get.put(SettingsScreenController());
 
     return WillPopScope(
@@ -25,6 +26,8 @@ class SettingsScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          foregroundColor: Get.isDarkMode ? Colors.white : Colors.black,
+          titleSpacing: 0,
           title: const Text("Settings"),
         ),
         body: Obx(

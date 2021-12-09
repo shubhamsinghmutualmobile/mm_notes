@@ -6,6 +6,7 @@ class FloatingBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.theme;
     const _splashRadius = 20.0;
     const _notchMargin = 8.0;
 
