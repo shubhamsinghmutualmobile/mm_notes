@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mm_notes/controllers/detail_screen_controller.dart';
 import 'package:mm_notes/controllers/landing_screen_controller.dart';
@@ -31,6 +32,10 @@ class _LandingScreenState extends State<LandingScreen> {
     final _transitionColor = Get.theme.cardColor;
 
     final _topPadding = MediaQuery.of(context).padding.top;
+
+    SystemChrome.setSystemUIOverlayStyle(
+        Get.isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark
+    );
 
     return Scaffold(
       appBar: TopSearchCard(),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mm_notes/controllers/settings_screen_controller.dart';
 
@@ -14,7 +15,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.theme;
+    context.theme; // Without this, themes don't rebuild correctly when user manually changes the theme
     final SettingsScreenController ssc = Get.put(SettingsScreenController());
 
     return WillPopScope(
@@ -24,6 +25,7 @@ class SettingsScreen extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
+          systemOverlayStyle: Get.isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
           backgroundColor: Colors.transparent,
           elevation: 0,
           foregroundColor: Get.isDarkMode ? Colors.white : Colors.black,

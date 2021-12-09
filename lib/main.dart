@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: 'ProductSans',
-        primaryColor: const Color(0xff9EC3F9),
+        primaryColor: const Color(0xff0054D8),
         scaffoldBackgroundColor: Colors.white,
         backgroundColor: const Color(0xffececf4),
         cardColor: Colors.transparent,
