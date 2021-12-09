@@ -115,10 +115,6 @@ class NotesGridView extends StatelessWidget {
           onTap: () {
             func();
           },
-          onLongPress: () {
-            db.delete(note.id);
-            lsc.refreshListOfNotes();
-          },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

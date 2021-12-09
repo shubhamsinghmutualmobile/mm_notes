@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mm_notes/controllers/detail_screen_controller.dart';
+import 'package:mm_notes/models/note.dart';
 
 import 'bottom_color_sheet.dart';
+import 'menu_bottom_sheet.dart';
 
 const iconSplashRadius = 20.0;
 
-Widget detailScreenBottomBar(Function onColorTap) {
+Widget detailScreenBottomBar(Function onColorTap, Note? note) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
   final _bottomPadding = Get.mediaQuery.padding.bottom;
   var formattedDate =
@@ -35,7 +37,9 @@ Widget detailScreenBottomBar(Function onColorTap) {
           ),
           Text("Edited at $formattedDate"),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                menuBottomSheet(_bottomPadding, note);
+              },
               icon: const Icon(Icons.more_vert),
               splashRadius: iconSplashRadius),
         ],

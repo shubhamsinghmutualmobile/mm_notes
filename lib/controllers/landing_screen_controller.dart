@@ -4,6 +4,7 @@ import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/utils/color_utils.dart';
 import 'package:mm_notes/utils/mappers.dart';
+import 'package:mm_notes/utils/note_utils.dart';
 
 class LandingScreenController extends GetxController {
   static const String columnId = DatabaseHelper.columnId;
@@ -62,7 +63,7 @@ class LandingScreenController extends GetxController {
             dateCreated: (mapNote[columnDateCreated] as int).toDouble(),
             noteColor: getNoteColorFromString(mapNote[columnNoteColor]),
             isPinned: (mapNote[columnIsPinned] as int).toBoolean()))
-        .toList();
+        .toList().reversed.toList();
   }
 }
 
