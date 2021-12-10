@@ -52,7 +52,7 @@ class NotesGridView extends StatelessWidget {
             crossFadeState: !lsc.isGridModeOn.value
                 ? CrossFadeState.showFirst
                 : CrossFadeState.showSecond,
-            duration: const Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 250),
             firstChild: gridWidget(
                 _paddingTop, _paddingBottom, notes, _transitionColor, db),
             secondChild: listWidget(
@@ -109,12 +109,12 @@ class NotesGridView extends StatelessWidget {
         closedColor: getColorFromNote(note),
         closedElevation: 0,
         openBuilder: (_, __) {
-          dsc.resetData();
           return NoteDetailScreen(note, lsc.refreshListOfNotes);
         },
         closedBuilder: (_, func) => InkWell(
           customBorder: RoundedRectangleBorder(borderRadius: cardShape),
           onTap: () {
+            dsc.resetData();
             func();
           },
           child: Padding(

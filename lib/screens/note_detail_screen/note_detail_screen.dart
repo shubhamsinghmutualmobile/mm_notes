@@ -12,7 +12,7 @@ class NoteDetailScreen extends StatelessWidget {
   final Note? note;
   final Function refreshNotes;
 
-  const NoteDetailScreen(this.note, this.refreshNotes, {Key? key})
+  NoteDetailScreen(this.note, this.refreshNotes, {Key? key})
       : super(key: key);
 
   static const String columnId = DatabaseHelper.columnId;
@@ -22,11 +22,12 @@ class NoteDetailScreen extends StatelessWidget {
   static const String columnNoteColor = DatabaseHelper.columnNoteColor;
   static const String columnIsPinned = DatabaseHelper.columnIsPinned;
 
+  final DetailScreenController dsc = Get.put(DetailScreenController());
+
   @override
   Widget build(BuildContext context) {
-    final DetailScreenController dsc = Get.put(DetailScreenController());
 
-    setupInitialViews(dsc);
+    dsc.setupInitialViews(note);
 
     return WillPopScope(
       onWillPop: () {
@@ -51,31 +52,7 @@ class NoteDetailScreen extends StatelessWidget {
     );
   }
 
-  void setupInitialViews(DetailScreenController dsc) {
-    var _titleController = dsc.titleController.value;
-    var _bodyController = dsc.bodyController.value;
-
-    dsc.currentNoteColorEnum ??= note?.noteColor ?? NoteColor.grey;
-
-    dsc.currentNoteColor ??= getColorFromNote(note).obs;
-
-    if (note != null) {
-      if (_titleController.text != note!.title &&
-          _titleController.text.isEmpty) {
-        _titleController.text = note!.title;
-      }
-      if (_bodyController.text != note!.body && _bodyController.text.isEmpty) {
-        _bodyController.text = note!.body;
-      }
-      dsc.currentDate =
-          DateTime.fromMicrosecondsSinceEpoch(note!.dateCreated.toInt());
-      dsc.isCurrentNotePinned.value = note!.isPinned;
-      dsc.updatePinnedIcon();
-    }
-  }
-
   Future<bool> _insertOrUpdateNote() async {
-    final dsc = Get.put(DetailScreenController());
     var _db = dsc.db;
     var _titleController = dsc.titleController.value;
     var _bodyController = dsc.bodyController.value;
