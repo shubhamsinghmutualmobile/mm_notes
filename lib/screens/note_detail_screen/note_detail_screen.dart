@@ -43,7 +43,7 @@ class NoteDetailScreen extends StatelessWidget {
         bottomNavigationBar: Obx(() => Container(
               color: dsc.currentNoteColor?.value,
               child: detailScreenBottomBar((Color noteColor) {
-                Get.back();
+                // Get.back();
                 dsc.currentNoteColor?.value = noteColor;
                 dsc.currentNoteColorEnum = getNoteColorFromColor(noteColor);
               }, note, context),
