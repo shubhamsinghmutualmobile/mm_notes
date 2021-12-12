@@ -19,6 +19,24 @@ class LandingScreenController extends GetxController {
   Rx<Icon> gridModeIcon = const Icon(Icons.grid_view).obs;
   var currentSelectedDrawerElement = DrawerElements.notes.obs;
 
+  var currentSearchQuery = "".obs;
+  RxList<Note> searchNotesList = RxList();
+
+  void searchNotes() {
+    print("Search notes called!");
+    if (!currentSearchQuery.value.isBlank!) {
+      searchNotesList.value = listOfNotes
+          .where((note) =>
+              note.title.contains(
+                  RegExp(currentSearchQuery.value, caseSensitive: false)) ||
+              note.body.contains(
+                  RegExp(currentSearchQuery.value, caseSensitive: false)))
+          .toList();
+    } else {
+      searchNotesList.value = RxList();
+    }
+  }
+
   void updateSelectedDrawerElement(DrawerElements element) {
     currentSelectedDrawerElement.value = element;
   }
@@ -74,6 +92,7 @@ class LandingScreenController extends GetxController {
     List<Note> unpinnedList =
         listOfNotes.value.where((note) => !note.isPinned).toList();
     listOfNotes.value = [...pinnedList, ...unpinnedList];
+    searchNotes();
   }
 }
 
