@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mm_notes/controllers/detail_screen_controller.dart';
+import 'package:mm_notes/controllers/landing_screen_controller.dart';
 import 'package:mm_notes/db/database_helper.dart';
 import 'package:mm_notes/models/note.dart';
 import 'package:mm_notes/utils/color_utils.dart';
@@ -11,8 +12,10 @@ import 'components/detail_screen_top_bar.dart';
 class NoteDetailScreen extends StatelessWidget {
   final Note? note;
   final Function refreshNotes;
+  final bool isTrashNote;
 
-  NoteDetailScreen(this.note, this.refreshNotes, {Key? key})
+  NoteDetailScreen(this.note, this.refreshNotes,
+      {Key? key, this.isTrashNote = false})
       : super(key: key);
 
   static const String columnId = DatabaseHelper.columnId;
@@ -23,10 +26,10 @@ class NoteDetailScreen extends StatelessWidget {
   static const String columnIsPinned = DatabaseHelper.columnIsPinned;
 
   final DetailScreenController dsc = Get.put(DetailScreenController());
+  final LandingScreenController lsc = Get.put(LandingScreenController());
 
   @override
   Widget build(BuildContext context) {
-
     dsc.setupInitialViews(note);
 
     return WillPopScope(
@@ -37,7 +40,20 @@ class NoteDetailScreen extends StatelessWidget {
         body: Obx(
           () => Container(
             color: dsc.currentNoteColor?.value,
-            child: detailScreenTopBar(_insertOrUpdateNote),
+            child: detailScreenTopBar(_insertOrUpdateNote, () {
+              if (note != null) {
+                dsc.db.insert({
+                  columnTitle: note!.title,
+                  columnBody: note!.body,
+                  columnDateCreated: note!.dateCreated,
+                  columnNoteColor: note!.noteColor.toString(),
+                  columnIsPinned: note!.isPinned ? 1 : 0
+                });
+                dsc.db.delete(note!.id, isTrashTable: true);
+                lsc.refreshListOfNotes(isTrashTable: true);
+                Get.back(closeOverlays: true);
+              }
+            }, isTrashNote: isTrashNote),
           ),
         ),
         bottomNavigationBar: Obx(() => Container(
@@ -46,7 +62,7 @@ class NoteDetailScreen extends StatelessWidget {
                 // Get.back();
                 dsc.currentNoteColor?.value = noteColor;
                 dsc.currentNoteColorEnum = getNoteColorFromColor(noteColor);
-              }, note, context),
+              }, note, context, isTrashNote: isTrashNote),
             )),
       ),
     );

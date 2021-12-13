@@ -11,7 +11,8 @@ import 'menu_bottom_sheet.dart';
 const iconSplashRadius = 20.0;
 
 Widget detailScreenBottomBar(
-    Function onColorTap, Note? note, BuildContext context) {
+    Function onColorTap, Note? note, BuildContext context,
+    {bool isTrashNote = false}) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
   final _bottomPadding = Get.mediaQuery.padding.bottom;
   var formattedDate =
@@ -26,16 +27,26 @@ Widget detailScreenBottomBar(
           Row(
             children: [
               IconButton(
-                  onPressed: () {
-                    context.unFocus();
-                  },
+                  disabledColor: Get.textTheme.headline4?.color,
+                  onPressed: isTrashNote
+                      ? null
+                      : () {
+                          context.unFocus();
+                        },
                   icon: const Icon(Icons.add_box_outlined),
                   splashRadius: iconSplashRadius),
               IconButton(
-                  onPressed: () {
-                    context.unFocus();
-                    showBottomColorSheet(onColorTap);
-                  },
+                  disabledColor: Get.textTheme.headline4?.color,
+                  onPressed: isTrashNote
+                      ? null
+                      : () {
+                          context.unFocus();
+                          if (isTrashNote) {
+                            editTrashNoteSnackBar(context);
+                          } else {
+                            showBottomColorSheet(onColorTap);
+                          }
+                        },
                   icon: const Icon(Icons.color_lens_outlined),
                   splashRadius: iconSplashRadius),
             ],
@@ -44,7 +55,7 @@ Widget detailScreenBottomBar(
           IconButton(
               onPressed: () {
                 context.unFocus();
-                menuBottomSheet(_bottomPadding, note);
+                menuBottomSheet(_bottomPadding, note, isTrashNote: isTrashNote);
               },
               icon: const Icon(Icons.more_vert),
               splashRadius: iconSplashRadius),
@@ -52,4 +63,11 @@ Widget detailScreenBottomBar(
       ),
     ),
   );
+}
+
+void editTrashNoteSnackBar(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    content: Text("Can't edit in Trash"),
+    duration: Duration(seconds: 2),
+  ));
 }

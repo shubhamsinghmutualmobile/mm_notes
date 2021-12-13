@@ -5,7 +5,8 @@ import 'package:mm_notes/controllers/detail_screen_controller.dart';
 const iconSplashRadius = 20.0;
 const padding = 8.0;
 
-Widget detailScreenTopBar(Function _insertOrUpdateNote) {
+Widget detailScreenTopBar(Function _insertOrUpdateNote, Function _onNoteRestore,
+    {bool isTrashNote = false}) {
   final DetailScreenController dsc = Get.put(DetailScreenController());
 
   final _topPadding = Get.mediaQuery.padding.top;
@@ -32,29 +33,33 @@ Widget detailScreenTopBar(Function _insertOrUpdateNote) {
                 ),
               ],
             ),
-            Row(
-              children: [
-                Obx(
-                  () => IconButton(
-                      onPressed: () {
-                        dsc.isCurrentNotePinned.toggle();
-                        dsc.updatePinnedIcon();
-                        print(dsc.isCurrentNotePinned.value);
-                      },
-                      icon: dsc.pinnedIcon.value,
-                      splashRadius: iconSplashRadius),
-                ),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add_alert_outlined),
-                    splashRadius: iconSplashRadius),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.archive_outlined),
-                    splashRadius: iconSplashRadius),
-                const SizedBox(width: padding)
-              ],
-            )
+            isTrashNote
+                ? Container()
+                : Row(
+                    children: [
+                      Obx(
+                        () => IconButton(
+                            onPressed: isTrashNote
+                                ? null
+                                : () {
+                                    dsc.isCurrentNotePinned.toggle();
+                                    dsc.updatePinnedIcon();
+                                    print(dsc.isCurrentNotePinned.value);
+                                  },
+                            icon: dsc.pinnedIcon.value,
+                            splashRadius: iconSplashRadius),
+                      ),
+                      IconButton(
+                          onPressed: isTrashNote ? null : () {},
+                          icon: const Icon(Icons.add_alert_outlined),
+                          splashRadius: iconSplashRadius),
+                      IconButton(
+                          onPressed: isTrashNote ? null : () {},
+                          icon: const Icon(Icons.archive_outlined),
+                          splashRadius: iconSplashRadius),
+                      const SizedBox(width: padding)
+                    ],
+                  )
           ],
         ),
         Expanded(
@@ -62,20 +67,38 @@ Widget detailScreenTopBar(Function _insertOrUpdateNote) {
             padding: const EdgeInsets.symmetric(horizontal: padding * 3),
             child: Column(
               children: [
-                TextField(
-                  maxLines: null,
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                      hintText: "Title", border: InputBorder.none),
-                  style: Get.textTheme.headline5,
+                GestureDetector(
+                  onTap: () {
+                    if (isTrashNote) {
+                      editTrashNoteSnackBar(Get.context!,
+                          onNoteRestore: _onNoteRestore);
+                    }
+                  },
+                  child: TextField(
+                    enabled: !isTrashNote,
+                    maxLines: null,
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                        hintText: "Title", border: InputBorder.none),
+                    style: Get.textTheme.headline5,
+                  ),
                 ),
                 Expanded(
-                  child: TextField(
-                    maxLines: null,
-                    controller: _bodyController,
-                    decoration: const InputDecoration(
-                        hintText: "Note", border: InputBorder.none),
-                    style: Get.textTheme.subtitle1,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (isTrashNote) {
+                        editTrashNoteSnackBar(Get.context!,
+                            onNoteRestore: _onNoteRestore);
+                      }
+                    },
+                    child: TextField(
+                      enabled: !isTrashNote,
+                      maxLines: null,
+                      controller: _bodyController,
+                      decoration: const InputDecoration(
+                          hintText: "Note", border: InputBorder.none),
+                      style: Get.textTheme.subtitle1,
+                    ),
                   ),
                 ),
               ],
@@ -85,4 +108,27 @@ Widget detailScreenTopBar(Function _insertOrUpdateNote) {
       ],
     ),
   );
+}
+
+void editTrashNoteSnackBar(BuildContext context, {Function? onNoteRestore}) {
+  ScaffoldMessenger.of(context).clearSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text("Can't edit in Trash"),
+        InkWell(
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text("Restore",
+                style: TextStyle(color: Get.theme.primaryColorDark)),
+          ),
+          onTap: () {
+            onNoteRestore?.call();
+          },
+        )
+      ],
+    ),
+    duration: const Duration(seconds: 2),
+  ));
 }

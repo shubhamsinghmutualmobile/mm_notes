@@ -63,8 +63,8 @@ class LandingScreenController extends GetxController {
     super.onInit();
   }
 
-  void refreshListOfNotes() async {
-    var dbList = await db.queryAll();
+  void refreshListOfNotes({bool isTrashTable = false}) async {
+    var dbList = await db.queryAll(isTrashTable: isTrashTable);
     if (dbList != null) {
       print("Updatedlist is: $mapOfNotes");
       mapOfNotes.value = dbList;

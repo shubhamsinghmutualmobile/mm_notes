@@ -11,7 +11,9 @@ import 'package:mm_notes/utils/color_utils.dart';
 import 'package:mm_notes/utils/note_utils.dart';
 
 class NotesGridView extends StatelessWidget {
-  NotesGridView({Key? key}) : super(key: key);
+  final bool isTrashTable;
+
+  NotesGridView({Key? key, this.isTrashTable = false}) : super(key: key);
 
   final LandingScreenController lsc = Get.put(LandingScreenController());
   final DetailScreenController dsc = Get.put(DetailScreenController());
@@ -21,13 +23,14 @@ class NotesGridView extends StatelessWidget {
     final DatabaseHelper db = lsc.db;
 
     var notes = lsc.listOfNotes;
+    lsc.refreshListOfNotes(isTrashTable: isTrashTable);
 
     final _paddingTop = MediaQuery.of(context).padding.top * 1.1;
     final _paddingBottom = MediaQuery.of(context).padding.bottom * 1.6;
     final _transitionColor = Get.theme.cardColor;
 
     return Obx(() {
-      if (notes.isEmpty) {
+      if (notes.isEmpty && !isTrashTable) {
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -109,7 +112,11 @@ class NotesGridView extends StatelessWidget {
         closedColor: getColorFromNote(note),
         closedElevation: 0,
         openBuilder: (_, __) {
-          return NoteDetailScreen(note, lsc.refreshListOfNotes);
+          return NoteDetailScreen(
+            note,
+            lsc.refreshListOfNotes,
+            isTrashNote: isTrashTable,
+          );
         },
         closedBuilder: (_, func) => InkWell(
           customBorder: RoundedRectangleBorder(borderRadius: cardShape),
