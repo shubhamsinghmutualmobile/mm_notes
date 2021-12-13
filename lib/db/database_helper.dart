@@ -8,6 +8,7 @@ class DatabaseHelper {
   static const _dbName = "mmNotesDb.db";
   static const _dbVersion = 1;
   static const _tableName = "notes_table";
+  static const _trashTableName = "trash_notes_table";
   static const columnId = "id";
   static const columnTitle = "title";
   static const columnBody = "body";
@@ -38,8 +39,19 @@ class DatabaseHelper {
   }
 
   Future _onCreate(Database db, int version) async {
-    db.execute('''
+    await db.execute('''
       CREATE TABLE $_tableName 
+      (
+      $columnId INTEGER PRIMARY KEY AUTOINCREMENT, 
+      $columnTitle TEXT NOT NULL, 
+      $columnBody TEXT NOT NULL, 
+      $columnDateCreated INTEGER NOT NULL,
+      $columnNoteColor TEXT NOT NULL,
+      $columnIsPinned BOOLEAN NOT NULL
+      );
+      ''');
+    await db.execute('''
+      CREATE TABLE $_trashTableName 
       (
       $columnId INTEGER PRIMARY KEY AUTOINCREMENT, 
       $columnTitle TEXT NOT NULL, 
@@ -52,17 +64,25 @@ class DatabaseHelper {
   }
 
   // Returns the id of the new item created
-  Future<int?> insert(Map<String, dynamic> row) async {
+  Future<int?> insert(Map<String, dynamic> row, {bool isTrashTable = false}) async {
     Database? db = await instance.database;
     if (db != null) {
-      return await db.insert(_tableName, row);
+      if(isTrashTable) {
+        return await db.insert(_trashTableName, row);
+      } else {
+        return await db.insert(_tableName, row);
+      }
     }
   }
 
-  Future<List<Map<String, dynamic>>?> queryAll() async {
+  Future<List<Map<String, dynamic>>?> queryAll({bool isTrashTable = false}) async {
     Database? db = await instance.database;
     if (db != null) {
-      return await db.query(_tableName);
+      if(isTrashTable) {
+        return await db.query(_trashTableName);
+      } else {
+        return await db.query(_tableName);
+      }
     }
   }
 
@@ -76,11 +96,23 @@ class DatabaseHelper {
     }
   }
 
-  Future<int?> delete(int id) async {
+  Future<int?> delete(int id, {bool isTrashTable = false}) async {
     Database? db = await instance.database;
     if (db != null) {
-      return await db
-          .delete(_tableName, where: '$columnId = ?', whereArgs: [id]);
+      if(isTrashTable) {
+        return await db
+            .delete(_trashTableName, where: '$columnId = ?', whereArgs: [id]);
+      } else {
+        return await db
+            .delete(_tableName, where: '$columnId = ?', whereArgs: [id]);
+      }
+    }
+  }
+
+  Future<int?> emptyTrash() async {
+    Database? db = await instance.database;
+    if (db != null) {
+      db.delete(_trashTableName, where: null);
     }
   }
 }
